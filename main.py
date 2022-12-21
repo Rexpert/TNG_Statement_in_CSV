@@ -2,10 +2,12 @@ import pandas as pd
 import numpy as np
 import camelot
 
+# Read PDF Statement into a table collection, the regions and columns separators is self-defined
 table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='all', flavor='stream',
                         table_regions=['20,600,820,50'], columns=['80,140,230,294,460,660,720'], 
                         split_text=True, strip_text='\n')
 
+# Merge all tables and clean the data
 df = (
     pd
     .concat([tbl.df for tbl in table._tables], ignore_index=True)
@@ -25,9 +27,11 @@ df = (
     )
 )
 
+# Separate the transactions with normal trx (df1) and GO+ trx (df2)
 df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
 df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
 
+# Get index which causing reversing entries
 idx = (
     df1
     .assign(
@@ -46,9 +50,11 @@ idx = (
     .index
 )
 
-idx = {(v+1 if k % 2 == 0 else v): (idx[k+1] if k % 2 == 0 else idx[k-1]+1) for k, v in enumerate(idx)}
+# Make correction on reversing entries
+idx = dict((v+1, idx[k+1]) if k % 2 == 0 else (v, idx[k-1]+1) for k, v in enumerate(idx))
 df1 = df1.rename(idx).sort_index()
 
+# Final cleaning
 df1 = (
     df1
     .assign(
@@ -79,6 +85,7 @@ df2 = (
     .query('~Description.str.contains("eWallet", regex=False)')
 )
 
+# Merge both trxs and export to csv
 (
     pd
     .concat([df1, df2])
