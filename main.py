@@ -31,7 +31,13 @@ df = (
 df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
 df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
 
-# Get index which causing reversing entries
+# Bug: Money Packet Received not displaying true bal
+for i, row in df1.loc[::-1].iterrows():
+    if row['Transaction Type'] == 'Money Packet Received':
+        bal = df1.at[i+1, 'Wallet Balance']
+        df1.at[i, 'Wallet Balance'] = bal + row['Amount (RM)']
+
+# Bug: Get index which causing reversing entries
 idx = (
     df1
     .assign(
