@@ -88,6 +88,15 @@ df1 = (
 
 df2 = (
     df2
+    .assign(
+        **{
+            'Amount (RM)': lambda x: np.where(
+                              x['Transaction Type']=='GO+ Cash Out',
+                              -x['Amount (RM)'],
+                              x['Amount (RM)']
+                          )
+        }
+    )
     .drop('Wallet Balance', axis=1)
     .query('~Description.str.contains("eWallet", regex=False)')
 )
