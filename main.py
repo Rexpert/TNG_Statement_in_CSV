@@ -57,6 +57,7 @@ idx = (
 )
 
 # Make correction on reversing entries
+idx = [v for k,v in enumerate(idx) if k%2==0 or v!=idx[k-1]+1]
 idx = dict((v+1, idx[k+1]) if k % 2 == 0 else (v, idx[k-1]+1) for k, v in enumerate(idx))
 df1 = df1.rename(idx).sort_index()
 
