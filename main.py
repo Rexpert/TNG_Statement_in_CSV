@@ -31,9 +31,25 @@ df = (
 df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
 df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
 
-# Bug: Money Packet Received not displaying true bal
+# # Bug: Direct Credit Entry missing
+# # Uncomment this section to add missing data
+# dc_entry = [{
+#     'Date': pd.Timestamp('2023-09-12'),
+#     'Transaction Type': 'Direct Credit',
+#     'Description': 'ADVANCED TECHNOLOGIES PTE LTD (EC)',
+#     'Amount (RM)': 0.5,
+#     'Wallet Balance': 0.5
+# }]
+# df1 = (
+#     pd
+#     .concat([df1, pd.DataFrame(dc_entry)], ignore_index=True)
+#     .sort_values('Date', kind='mergesort', ascending=False)
+#     .reset_index(drop=True)
+# )
+
+# Bug: Money Packet Received & Direct Credit not displaying true bal
 for i, row in df1.loc[::-1].iterrows():
-    if row['Transaction Type'] == 'Money Packet Received':
+    if row['Transaction Type'] in ['Money Packet Received', 'Direct Credit']:
         bal = df1.at[i+1, 'Wallet Balance']
         df1.at[i, 'Wallet Balance'] = bal + row['Amount (RM)']
 
