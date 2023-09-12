@@ -54,12 +54,26 @@ idx = (
     )
     .loc[lambda x: x['Amount (RM)'].isna()][:-1]
     .index
+    .to_list()
 )
 
 # Make correction on reversing entries
-idx = [v for k,v in enumerate(idx) if k%2==0 or v!=idx[k-1]+1]
-idx = dict((v+1, idx[k+1]) if k % 2 == 0 else (v, idx[k-1]+1) for k, v in enumerate(idx))
-df1 = df1.rename(idx).sort_index()
+new_idx = []
+for k,v in enumerate(idx):
+    if k != 0:
+        if idx[k-1]+2 == v:
+            new_idx.append((v-1, v))
+            new_idx.append((v, v-1))
+            idx.remove(v)    
+        elif idx[k-1]+2 == idx[k+1]:
+            new_idx.append((v, v+1))
+            new_idx.append((v+1, v))
+            idx.remove(idx[k-1])
+            idx.remove(v)
+        else:
+            raise ValueError('Some Entry Not Recorded Properly')
+
+df1 = df1.rename(dict(new_idx)).sort_index()
 
 # Final cleaning
 df1 = (
