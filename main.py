@@ -4,7 +4,7 @@ import camelot
 
 # Read PDF Statement into a table collection, the regions and columns separators is self-defined
 table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='all', flavor='stream',
-                        table_regions=['20,600,820,50'], columns=['80,140,230,294,460,660,720'], 
+                        table_areas=['20,600,820,50'], columns=['80,140,230,294,460,660,720'], 
                         split_text=True, strip_text='\n')
 
 # Merge all tables and clean the data
@@ -136,5 +136,5 @@ df2 = (
     pd
     .concat([df1, df2])
     .sort_values('Date', kind='mergesort')
-    .to_csv(r'.\output\tng_ewallet_transactions.csv', index=False, encoding='utf-8')
+    .to_csv(r'.\output\tng_ewallet_transactions1.csv', index=False, encoding='utf-8')
 )
