@@ -136,5 +136,5 @@ df2 = (
     pd
     .concat([df1, df2])
     .sort_values('Date', kind='mergesort')
-    .to_csv(r'.\output\tng_ewallet_transactions1.csv', index=False, encoding='utf-8')
+    .to_csv(r'.\output\tng_ewallet_transactions.csv', index=False, encoding='utf-8')
 )
