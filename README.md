@@ -72,6 +72,23 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
     ```
 5. Get your transaction table named `tng_ewallet_transactions.csv` in `output` folder.
 
+# Troubleshoot
+Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  
+1. Reverse Entry (Found on c5156d7)  
+   - The latest transaction recorded before an older transaction. 
+   - This usually happens during the [Quick Reload Payment](https://www.touchngo.com.my/goplus/#:~:text=What%20is%20Quick%20Reload%20Payment) via Go+. In this scenario, the payment is recorded first, then the reload occurs after.
+   - I have implemented an autofix in the code to address this.
+2. Money Packet Balance (Found on 8fe26a5)
+   - The wallet balance of the money packet entries unexpectedly equals the amount of money packet received.
+   - This is happened in the CNY 2023 when the [Money Packet Campaign](https://www.touchngo.com.my/faq/snatch-ang-pow-campaign/) took place.
+   - I have implemented an autofix in the code to address this.
+3. Missing Direct Credit entry (Found on 362cc8a)
+   - Direct Credit entries are not recorded in the transaction history
+   - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. However, they can be viewed in the TNG e-Wallet app's history.
+   - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised. 
+4. Other Unknown Bugs
+   - Any uncaught bug will raise `ValueError: Some Entry Not Recorded Properly` and exit the code unexpectedly. Please open an issue and attach/screenshot the relevant transaction history pdf if found such case. 
+
 # Disclaimer
 1. I don't work in [Touch 'n Go](https://www.touchngo.com.my/) company, and hence do not represent Touch 'n Go.
 2. This repository is my work to ease myself in analyzing my own expenses in Touch 'n Go e-Wallet. But you can freely use it and welcome to contribute, you are helping me to make this code more meaningful.
