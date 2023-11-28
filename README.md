@@ -74,15 +74,15 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
 
 # Troubleshoot
 Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  
-1. Reverse Entry (Found on c5156d7ae697589971cae36ef3f54497dd2d3ce5)  
+1. Reverse Entry (Found on [c5156d7](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/c5156d7ae697589971cae36ef3f54497dd2d3ce5))  
    - The latest transaction recorded before an older transaction. 
    - This usually happens during the [Quick Reload Payment](https://www.touchngo.com.my/goplus/#:~:text=What%20is%20Quick%20Reload%20Payment) via Go+. In this scenario, the payment is recorded first, then the reload occurs after.
    - I have implemented an autofix in the code to address this.
-2. Money Packet Balance (Found on 8fe26a5b2e9884737b0a6bda975054a0f44aaaea)
+2. Money Packet Balance (Found on [8fe26a5](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/8fe26a5b2e9884737b0a6bda975054a0f44aaaea))
    - The wallet balance of the money packet entries unexpectedly equals the amount of money packet received.
    - This is happened in the CNY 2023 when the [Money Packet Campaign](https://www.touchngo.com.my/faq/snatch-ang-pow-campaign/) took place.
    - I have implemented an autofix in the code to address this.
-3. Missing Direct Credit entry (Found on 362cc8a1362859e0be5d71780b8c2a10ddb62527)
+3. Missing Direct Credit entry (Found on [362cc8a](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/362cc8a1362859e0be5d71780b8c2a10ddb62527))
    - Direct Credit entries are not recorded in the transaction history
    - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. However, they can be viewed in the TNG e-Wallet app's history.
    - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised. 
