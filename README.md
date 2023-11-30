@@ -78,14 +78,23 @@ Some known bugs happen during the generation of the pdf transaction report by TN
    - The latest transaction recorded before an older transaction. 
    - This usually happens during the [Quick Reload Payment](https://www.touchngo.com.my/goplus/#:~:text=What%20is%20Quick%20Reload%20Payment) via Go+. In this scenario, the payment is recorded first, then the reload occurs after.
    - I have implemented an autofix in the code to address this.
+   - Example:
+     ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/067e6ffe-28a4-45d0-a566-4219587cc18b)
+
 2. Money Packet Balance (Found on [8fe26a5](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/8fe26a5b2e9884737b0a6bda975054a0f44aaaea))
    - The wallet balance of the money packet entries unexpectedly equals the amount of money packet received.
    - This is happened in the CNY 2023 when the [Money Packet Campaign](https://www.touchngo.com.my/faq/snatch-ang-pow-campaign/) took place.
    - I have implemented an autofix in the code to address this.
+   - Example:
+     ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/aa06e93d-480e-4ed1-aa93-d4cbc036b461)
+
 3. Missing Direct Credit entry (Found on [362cc8a](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/362cc8a1362859e0be5d71780b8c2a10ddb62527))
    - Direct Credit entries are not recorded in the transaction history
    - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. However, they can be viewed in the TNG e-Wallet app's history.
-   - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised. 
+   - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised.
+   - Example:
+     ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/f56ea6cd-f798-469a-81db-577d83f8e71b)
+
 4. Other Unknown Bugs
    - Any uncaught bug will raise `ValueError: Some Entry Not Recorded Properly` and exit the code unexpectedly. Please open an issue and attach/screenshot the relevant transaction history pdf if found such case. 
 
