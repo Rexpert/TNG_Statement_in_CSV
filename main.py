@@ -2,9 +2,10 @@ import pandas as pd
 import numpy as np
 import camelot
 
-# Read PDF Statement into a table collection, the regions and columns separators is self-defined
+# Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
 table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='all', flavor='stream',
-                        table_areas=['20,600,820,50'], columns=['80,140,230,294,460,660,720'], 
+                        table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
+                        columns=['80,140,230,2444,460,660,720'], 
                         split_text=True, strip_text='\n')
 
 # Merge all tables and clean the data
