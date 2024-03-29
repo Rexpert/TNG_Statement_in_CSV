@@ -55,34 +55,37 @@ for i, row in df1.loc[::-1].iterrows():
         df1.at[i, 'Wallet Balance'] = bal + row['Amount (RM)']
 
 # Bug: Get index which causing reversing entries
-idx = (
-    df1
-    .assign(
-        prev_bal=lambda x: x['Wallet Balance'].shift(-1),
-        **{
-            'Amount (RM)': lambda x: np.select([
-                np.round(x['prev_bal']+x['Amount (RM)'], 2)==x['Wallet Balance'],
-                np.round(x['prev_bal']-x['Amount (RM)'], 2)==x['Wallet Balance']
-            ], [
-                x['Amount (RM)'],
-                -x['Amount (RM)']
-            ], np.nan)
-        }
+def check_reverse_entry(df1):
+    return (
+        df1
+        .assign(
+            prev_bal=lambda x: x['Wallet Balance'].shift(-1),
+            **{
+                'Amount (RM)': lambda x: np.select([
+                    np.round(x['prev_bal']+x['Amount (RM)'], 2)==x['Wallet Balance'],
+                    np.round(x['prev_bal']-x['Amount (RM)'], 2)==x['Wallet Balance']
+                ], [
+                    x['Amount (RM)'],
+                    -x['Amount (RM)']
+                ], np.nan)
+            }
+        )
+        .loc[lambda x: x['Amount (RM)'].isna()][:-1]
+        .index
+        .to_list()
     )
-    .loc[lambda x: x['Amount (RM)'].isna()][:-1]
-    .index
-    .to_list()
-)
+idx = check_reverse_entry(df1)
 
 # Make correction on reversing entries
 new_idx = []
 for k,v in enumerate(idx):
     if k != 0:
-        if idx[k-1]+2 == v:
-            new_idx.append((v-1, v))
-            new_idx.append((v, v-1))
-            idx.remove(v)    
-        elif idx[k-1]+2 == idx[k+1]:
+        if (diff := (v - idx[k-1])) % 2 == 0:
+            for i in range(int(diff/2)):
+                new_idx.append((v-i*2-1, v-i*2))
+                new_idx.append((v-i*2, v-i*2-1))
+            idx.remove(v)
+        elif idx[k+1] - idx[k-1] == 2:
             new_idx.append((v, v+1))
             new_idx.append((v+1, v))
             idx.remove(idx[k-1])
@@ -91,6 +94,11 @@ for k,v in enumerate(idx):
             raise ValueError('Some Entry Not Recorded Properly')
 
 df1 = df1.rename(dict(new_idx)).sort_index()
+
+# Rechecking reversing entries
+idx = check_reverse_entry(df1)
+if len(idx) != 0:
+    raise ValueError('Some Entry Not Recorded Properly')
 
 # Final cleaning
 df1 = (
