@@ -110,11 +110,9 @@ for k,v in enumerate(idx):
 df1 = df1.rename(dict(new_idx)).sort_index()
 
 # Rechecking reversing entries
-## TODO: Commenting this to skip check in order to run smoothly
-## unsure the downside.
-# idx = check_reverse_entry(df1)
-# if len(idx) != 0:
-#     raise ValueError('Some Entry Not Recorded Properly')
+idx = check_reverse_entry(df1)
+if len(idx) != 0:
+    raise ValueError('Some Entry Not Recorded Properly')
 
 # Final cleaning
 df1 = (
