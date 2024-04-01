@@ -10,16 +10,14 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
 
     #### **For Mac / Linux / Windows WSL user
     > It is suggested to setup [Python virtual environment](https://docs.python.org/3/library/venv.html) within the project folder.
-    > Assuming you already installed Python 3 in your machine, and your starting command can either be `python` or `python3` (Use the one that works for you)
+    > Assuming that you have successfully installed Python 3 in your machine, and your starting command can either be `python` or `python3` (Use the one that works for you).
     
-    > This command is to create a virtual environment with folder name `.venv` inside your project.
+    > Below command is to create a virtual environment with folder name `.venv` inside your project.
     > ```sh
-    > # Use either one.
     > python -m venv .venv
-    > python3 -m venv .venv
     > ```
 
-    > This command is to activate the virtual environment. After activating it, the rest of the dependencies installation can continue as follow.
+    > Below command is to activate the virtual environment. After activating it, the rest of the dependencies installation can continue as follow.
     > ```sh
     > source .venv/bin/activate
     > ```
