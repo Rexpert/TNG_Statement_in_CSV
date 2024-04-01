@@ -50,7 +50,6 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
         ```
         conda install -c conda-forge opencv
         ```
-      - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
     </details>
     <details>
       <summary>
