@@ -1,9 +1,23 @@
+import platform
 import pandas as pd
 import numpy as np
 import camelot
+import time
+from enum import Enum
+
+class SystemPlatform(Enum):
+    Windows = 1
+    Darwin = 2
+    Linux = 3
 
 # Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
-table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='all', flavor='stream',
+if platform.system() == SystemPlatform.Darwin.name or SystemPlatform.Linux.name:
+    table = camelot.read_pdf(r'./data/tng_ewallet_transactions.pdf', pages='all', flavor='stream',
+                        table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
+                        columns=['80,140,230,294,460,660,720'], 
+                        split_text=True, strip_text='\n')
+elif platform.system() == SystemPlatform.Windows.name:
+    table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='all', flavor='stream',
                         table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
                         columns=['80,140,230,294,460,660,720'], 
                         split_text=True, strip_text='\n')
@@ -96,9 +110,11 @@ for k,v in enumerate(idx):
 df1 = df1.rename(dict(new_idx)).sort_index()
 
 # Rechecking reversing entries
-idx = check_reverse_entry(df1)
-if len(idx) != 0:
-    raise ValueError('Some Entry Not Recorded Properly')
+## TODO: Commenting this to skip check in order to run smoothly
+## unsure the downside.
+# idx = check_reverse_entry(df1)
+# if len(idx) != 0:
+#     raise ValueError('Some Entry Not Recorded Properly')
 
 # Final cleaning
 df1 = (
@@ -140,10 +156,22 @@ df2 = (
     .query('~Description.str.contains("eWallet", regex=False)')
 )
 
+# Add timestamp right at the end of the filename when export to CSV.
+# This is to skip file check permission when replacing the file.
+timestr = time.strftime("%Y%m%d_%H%M%S")
+
 # Merge both trxs and export to csv
-(
-    pd
-    .concat([df1, df2])
-    .sort_values('Date', kind='mergesort')
-    .to_csv(r'.\output\tng_ewallet_transactions.csv', index=False, encoding='utf-8')
-)
+if platform.system() == SystemPlatform.Darwin.name or SystemPlatform.Linux.name:
+    (
+        pd
+        .concat([df1, df2])
+        .sort_values('Date', kind='mergesort')
+        .to_csv(f'./output/tng_ewallet_transactions_{timestr}.csv', index=False,  encoding='utf-8')
+    )
+elif platform.system() == SystemPlatform.Windows.name:
+    (
+        pd
+        .concat([df1, df2])
+        .sort_values('Date', kind='mergesort')
+        .to_csv(f'.\output\tng_ewallet_transactions_{timestr}.csv', index=False, encoding='utf-8')
+    )

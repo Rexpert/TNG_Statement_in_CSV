@@ -14,7 +14,7 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
       
       - Installation via `pip`
         ```
-        pip install camelot-py[cv]
+        pip install camelot-py
         ```
       - or if you're using conda environment
         ```
@@ -39,6 +39,21 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
     </details>
     <details>
       <summary>
+        opencv-python: Handle missing / no module named cv2
+      </summary>
+      
+      - Installation via `pip`
+        ```
+        pip install opencv-python
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge opencv
+        ```
+      - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
+    </details>
+    <details>
+      <summary>
         matplotlib: page visualization (Optional)
       </summary>
       
@@ -58,12 +73,13 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
         Recommended setup:
       </summary>
       
-      | Installation | Version | 
-      | ------------ | :-----: |
-      | `python`     | 3.9.12  |
-      | `camelot-py` | 0.10.1  |
-      | `pandas`     | 1.4.3   |
-      | `matplotlib` | 3.5.2   |
+      | Installation    | Version | 
+      | --------------- | :-----: |
+      | `python`        | 3.9.12  |
+      | `camelot-py`    | 0.10.1  |
+      | `pandas`        | 1.4.3   |
+      | `opencv-python` | 4.9.0   |
+      | `matplotlib`    | 3.5.2   |
     </details>
 3. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data` folder
 4. Run the [main.py](main.py)
