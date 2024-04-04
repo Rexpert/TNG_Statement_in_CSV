@@ -14,14 +14,14 @@ class SystemPlatform(Enum):
 # This is to skip file check permission when replacing the file.
 time_str = time.strftime("%Y%m%d_%H%M%S")
 
-# Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
 if platform.system() == SystemPlatform.Darwin.name or platform.system() == SystemPlatform.Linux.name:
     PDF_LINK = r'./data/tng_ewallet_transactions.pdf'
-    CSV_LINK = f'./output/tng_ewallet_transactions_{time_str}.csv'
+    CSV_LINK = rf'./output/tng_ewallet_transactions_{time_str}.csv'
 elif platform.system() == SystemPlatform.Windows.name:
     PDF_LINK = r'.\data\tng_ewallet_transactions.pdf'
-    CSV_LINK = f'.\output\tng_ewallet_transactions_{time_str}.csv'
+    CSV_LINK = rf'.\output\tng_ewallet_transactions_{time_str}.csv'
 
+# Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
 table = camelot.read_pdf(PDF_LINK, pages='all', flavor='stream',
     table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
     columns=['80,140,230,294,460,660,720'], 
