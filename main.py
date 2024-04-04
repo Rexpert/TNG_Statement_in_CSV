@@ -1,12 +1,31 @@
+import platform
 import pandas as pd
 import numpy as np
 import camelot
+import time
+from enum import Enum
+
+class SystemPlatform(Enum):
+    Windows = 1
+    Darwin = 2
+    Linux = 3
+
+# Add timestamp right at the end of the filename when export to CSV.
+# This is to skip file check permission when replacing the file.
+time_str = time.strftime("%Y%m%d_%H%M%S")
 
 # Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
-table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='all', flavor='stream',
-                        table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
-                        columns=['80,140,230,294,460,660,720'], 
-                        split_text=True, strip_text='\n')
+if platform.system() == SystemPlatform.Darwin.name or platform.system() == SystemPlatform.Linux.name:
+    PDF_LINK = r'./data/tng_ewallet_transactions.pdf'
+    CSV_LINK = f'./output/tng_ewallet_transactions_{time_str}.csv'
+elif platform.system() == SystemPlatform.Windows.name:
+    PDF_LINK = r'.\data\tng_ewallet_transactions.pdf'
+    CSV_LINK = f'.\output\tng_ewallet_transactions_{time_str}.csv'
+
+table = camelot.read_pdf(PDF_LINK, pages='all', flavor='stream',
+    table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
+    columns=['80,140,230,294,460,660,720'], 
+    split_text=True, strip_text='\n')
 
 # Merge all tables and clean the data
 df = (
@@ -145,5 +164,5 @@ df2 = (
     pd
     .concat([df1, df2])
     .sort_values('Date', kind='mergesort')
-    .to_csv(r'.\output\tng_ewallet_transactions.csv', index=False, encoding='utf-8')
+    .to_csv(CSV_LINK, index=False,  encoding='utf-8')
 )
