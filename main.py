@@ -89,7 +89,11 @@ def check_reverse_entry(df1):
                 ], np.nan)
             }
         )
-        .loc[lambda x: x['Amount (RM)'].isna()][:-1]
+        # Exclude additional legitimate transaction types like PayDirect Payment
+        .loc[lambda x: (
+            x['Amount (RM)'].isna() &
+            ~x['Transaction Type'].str.contains('RFID Payment|eWallet Cash Out|Reload|Transfer to Wallet|DUITNOW|PayDirect Payment', na=False)
+        )][:-1]
         .index
         .to_list()
     )
