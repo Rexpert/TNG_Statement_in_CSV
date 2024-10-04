@@ -47,7 +47,6 @@ df = (
     )
 )
 
-
 # Separate the transactions with normal trx (df1) and GO+ trx (df2)
 df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
 df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
