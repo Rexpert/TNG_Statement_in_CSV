@@ -41,8 +41,8 @@ df = (
     .assign(
         Date=lambda x: pd.to_datetime(x.Date, format=r'%d/%m/%Y'),
         **{
-            'Amount (RM)': lambda x: x['Amount (RM)'].str.strip('RM').astype(float),
-            'Wallet Balance': lambda x: x['Wallet Balance'].str.strip('RM').astype(float)
+            'Amount (RM)': lambda x: x['Amount (RM)'].str.replace('RM', '').str.replace(',', '').astype(float),
+            'Wallet Balance': lambda x: x['Wallet Balance'].str.replace('RM', '').str.replace(',', '').astype(float)
         }
     )
 )
