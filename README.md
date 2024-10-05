@@ -31,45 +31,95 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
     git clone https://github.com/Rexpert/TNG_Statement_in_CSV.git
     ```
 
-2. You need to install [Python 3](https://www.python.org/)
+2. It is recommended to setup virtual environment before installing the dependencies. You may choose either `venv` or `conda` to manage your virtual environment
 
-3. Setting Up a Python Virtual Environment with `venv` and Installing Dependencies
+    <details open>
+      <summary>
+        Managing virtual environment using venv
+      </summary>
+      <br>
+      
+      This guide will help you create a Python virtual environment using `venv` and install dependencies from a `requirements.txt` file.
+      
+      First, You need to install [Python 3](https://www.python.org/)
 
-    This guide will help you create a Python virtual environment using `venv` and install dependencies from a `requirements.txt` file.
+      To create a virtual environment:
 
-    To create a virtual environment:
+      ```bash
+      # Create a virtual environment (you can name it '.venv' or something else)
+      python -m venv .venv
+      ```
 
-    ```bash
-    # Create a virtual environment (you can name it '.venv' or something else)
-    python -m venv .venv
-    ```
-
-    Then, activate the virtual environment.
+      Then, activate the virtual environment.
 
 
-    ```bash
-    # On Windows:
-    .\.venv\Scripts\activate
+      ```bash
+      # On Windows:
+      .\.venv\Scripts\activate
 
-    # On macOS/Linux:
-    source .venv/bin/activate
-    ```
+      # On macOS/Linux:
+      source .venv/bin/activate
+      ```
 
-    Once your virtual environment is activated, install the dependencies listed in `requirements.txt` by running:
+      Once your virtual environment is activated, install the dependencies listed in `requirements.txt` by running:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+      ```bash
+      # Installing required dependencies
+      pip install -r requirements.txt
+      ```
+      
+      Alternatively you may install the package manually using the method mentioned in [3. Packages](#packages)
 
-    When you’re done working, you can deactivate the virtual environment by running:
+      When you’re done working, you can deactivate the virtual environment by running:
 
-    ```bash
-    deactivate
-    ```
+      ```bash
+      deactivate
+      ```
 
-    This will deactivate the current environment and return you to your system’s default Python environment.
+      This will deactivate the current environment and return you to your system’s default Python environment.
+    </details>
+    
+    ---
+    
+    <details>
+      <summary>
+        Managing virtual environment using conda
+      </summary>
+      <br>
+      
+      Download & install miniconda from the [official website](https://docs.anaconda.com/miniconda/miniconda-install/) 
+      
+      To create a new conda environment (cloning the `base`):
+      ```bash
+      # # Create a conda environment (you can name it 'tng' or something else)
+      conda create -n tng --clone base
+      ```
+      
+      To switch over the `tng` environment
+      ```bash
+      # Activating 'tng' environment
+      conda activate tng
+      ```
+      
+      Once your conda environment is activated, install the dependencies listed in requirements.txt by running:
+      ```bash
+      # Installing required dependencies
+      pip install -r requirements.txt
+      ```
+      
+      Alternatively you may install the package manually using the method mentioned in [3. Packages](#packages)
+      
+      To leave the `tng` environment
+      ```bash
+      # Deactivating 'tng' environment
+      conda deactivate tng
+      ```
+      
+    </details>
 
-4. Packages
+<a id='packages'></a>
+
+3. Packages
 
     Recommended setup
 
@@ -143,14 +193,14 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
     </details>
     <br/>
 
-5. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data/` folder
+4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data/` folder
 
-6. Run the [main.py](main.py)
+5. Run the [main.py](main.py)
     ```
     python main.py
     ```
 
-7. Get your transaction table named `tng_ewallet_transactions.csv` in `output` folder.
+6. Get your transaction table named `tng_ewallet_transactions.csv` in `output/` folder.
 
 ## Troubleshoot
 Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  
