@@ -6,7 +6,7 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
 
 > Do not go to [Touch'n Go Web Portal](https://tngportal.touchngo.com.my/#login), it's unrelated to TNG Ewallet
 
-Here're the official instruction provided by Touch'n Go in TNG eWallet app
+Here're the [official instruction](https://support.tngdigital.com.my/hc/en-my/articles/360035649754-How-can-I-view-or-download-my-transaction-history) provided by Touch'n Go in TNG eWallet app. 
 
 ![instruction1](./images/transaction_1.jpeg)
 ![instruction2](./images/transaction_2.jpeg)
@@ -26,7 +26,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
 
 ## Usage
-1. Clone this repo.
+1. Clone this repo to your local.
     ```
     git clone https://github.com/Rexpert/TNG_Statement_in_CSV.git
     ```
@@ -35,115 +35,115 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
 3. Setting Up a Python Virtual Environment with `venv` and Installing Dependencies
 
-This guide will help you create a Python virtual environment using `venv` and install dependencies from a `requirements.txt` file.
+    This guide will help you create a Python virtual environment using `venv` and install dependencies from a `requirements.txt` file.
 
-To create a virtual environment:
+    To create a virtual environment:
 
-```bash
-# Create a virtual environment (you can name it '.venv' or something else)
-python -m venv .venv
-```
+    ```bash
+    # Create a virtual environment (you can name it '.venv' or something else)
+    python -m venv .venv
+    ```
 
-Then, activate the virtual environment.
+    Then, activate the virtual environment.
 
 
-```bash
-# On Windows:
-.\.venv\Scripts\activate
+    ```bash
+    # On Windows:
+    .\.venv\Scripts\activate
 
-# On macOS/Linux:
-source .venv/bin/activate
-```
+    # On macOS/Linux:
+    source .venv/bin/activate
+    ```
 
-Once your virtual environment is activated, install the dependencies listed in `requirements.txt` by running:
+    Once your virtual environment is activated, install the dependencies listed in `requirements.txt` by running:
 
-```bash
-pip install -r requirements.txt
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-When you’re done working, you can deactivate the virtual environment by running:
+    When you’re done working, you can deactivate the virtual environment by running:
 
-```bash
-deactivate
-```
+    ```bash
+    deactivate
+    ```
 
-This will deactivate the current environment and return you to your system’s default Python environment.
+    This will deactivate the current environment and return you to your system’s default Python environment.
 
 4. Packages
 
-Recommended setup
+    Recommended setup
 
-| Installation    | Version | 
-| --------------- | :-----: |
-| `python`        | 3.9.12  |
-| `camelot-py`    | 0.10.1  |
-| `pandas`        | 1.4.3   |
-| `opencv-python` | 4.9.0   |
-| `matplotlib`    | 3.5.2   |
+    | Installation    | Version | 
+    | --------------- | :-----: |
+    | `python`        | 3.9.12  |
+    | `camelot-py`    | 0.10.1  |
+    | `pandas`        | 1.4.3   |
+    | `opencv-python` | 4.9.0   |
+    | `matplotlib`    | 3.5.2   |
 
-<details>
-  <summary>
-    camelot-py: to read PDF statement
-  </summary>
+    <details>
+      <summary>
+        camelot-py: to read PDF statement
+      </summary>
 
-  - Installation via `pip`
-    ```
-    pip install camelot-py
-    ```
-  - or if you're using conda environment
-    ```
-    conda install -c conda-forge camelot-py
-    ```
-  - Detail installation please refer to `camelot-py` [Documentation](https://camelot-py.readthedocs.io/en/master/) 
-</details>
-<details>
-  <summary>
-    pandas: data manipulation
-  </summary>
+      - Installation via `pip`
+        ```
+        pip install camelot-py
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge camelot-py
+        ```
+      - Detail installation please refer to `camelot-py` [Documentation](https://camelot-py.readthedocs.io/en/master/) 
+    </details>
+    <details>
+      <summary>
+        pandas: data manipulation
+      </summary>
 
-  - Installation via `pip`
-    ```
-    pip install pandas
-    ```
-  - or if you're using conda environment
-    ```
-    conda install -c conda-forge pandas
-    ```
-  - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
-</details>
-<details>
-  <summary>
-    opencv-python: Handle missing / no module named cv2
-  </summary>
+      - Installation via `pip`
+        ```
+        pip install pandas
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge pandas
+        ```
+      - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
+    </details>
+    <details>
+      <summary>
+        opencv-python: Handle missing / no module named cv2
+      </summary>
 
-  - Installation via `pip`
-    ```
-    pip install opencv-python
-    ```
-  - or if you're using conda environment
-    ```
-    conda install -c conda-forge opencv
-    ```
-</details>
-<details>
-  <summary>
-    matplotlib: page visualization (Optional)
-  </summary>
+      - Installation via `pip`
+        ```
+        pip install opencv-python
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge opencv
+        ```
+    </details>
+    <details>
+      <summary>
+        matplotlib: page visualization (Optional)
+      </summary>
 
-  - Installation via `pip`
-    ```
-    pip install matplotlib
-    ```
-  - or if you're using conda environment
-    ```
-    conda install -c conda-forge matplotlib
-    ```
-  - [Visual Debug](https://camelot-py.readthedocs.io/en/master/user/advanced.html#visual-debugging) on table generation
-  - Detail installation please refer to `matplotlib` [Documentation](https://matplotlib.org/) 
-</details>
-<br/>
+      - Installation via `pip`
+        ```
+        pip install matplotlib
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge matplotlib
+        ```
+      - [Visual Debug](https://camelot-py.readthedocs.io/en/master/user/advanced.html#visual-debugging) on table generation
+      - Detail installation please refer to `matplotlib` [Documentation](https://matplotlib.org/) 
+    </details>
+    <br/>
 
-5. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data` folder
+5. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data/` folder
 
 6. Run the [main.py](main.py)
     ```
