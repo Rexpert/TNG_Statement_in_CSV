@@ -1,0 +1,6 @@
+camelot-py==0.10.1
+pandas==1.4.3
+opencv-python==4.10.0.84
+matplotlib==3.5.2
+numpy==1.26.4
+PyPDF2==2.12.1
