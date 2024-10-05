@@ -3,3 +3,6 @@ output/tng_ewallet_transactions*.csv
 
 # Ignore folder for virtual environment.
 /*venv
+
+# general
+.DS_Store

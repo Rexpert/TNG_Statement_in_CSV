@@ -1,115 +1,158 @@
 # TNG Statement in CSV
 This code builds a CSV table that records all transactions within TNG e-Wallet from its statement.
 
-# Usage
+
+## How to download TNG Ewallet Statement
+
+> Do not go to [Touch'n Go Web Portal](https://tngportal.touchngo.com.my/#login), it's unrelated to TNG Ewallet
+
+Here're the official instruction provided by Touch'n Go in TNG eWallet app
+
+![instruction1](./images/transaction_1.jpeg)
+![instruction2](./images/transaction_2.jpeg)
+
+The instruction above is little bit outdated, a newer flow as of writing time is like:
+- go to your "Transactions" in TNG eWallet app
+- Click "View All", just need to go to the Transaction History page
+- Check top right corner, click "Email"
+- You have the option to choose to email Last 90 days transaction history or current search result
+- Submit
+
+After wait for awhile you should receive an email from Touch'n Go as shown below:
+
+![email](./images/tng_email.png)
+
+Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf**, and put this file into `data/` folder of this project.
+
+
+## Usage
 1. Clone this repo.
     ```
     git clone https://github.com/Rexpert/TNG_Statement_in_CSV.git
     ```
-2. You need to install [Python 3](https://www.python.org/) and its relevant dependencies:
 
-    #### **For Mac / Linux / Windows WSL user
-    > It is suggested to setup [Python virtual environment](https://docs.python.org/3/library/venv.html) within the project folder.
-    > Assuming that you have successfully installed Python 3 in your machine, and your starting command can either be `python` or `python3` (Use the one that works for you).
-    
-    > Below command is to create a virtual environment with folder name `.venv` inside your project.
-    > ```sh
-    > python -m venv .venv
-    > ```
+2. You need to install [Python 3](https://www.python.org/)
 
-    > Below command is to activate the virtual environment. After activating it, the rest of the dependencies installation can continue as follow.
-    > ```sh
-    > source .venv/bin/activate
-    > ```
-    >
+3. Setting Up a Python Virtual Environment with `venv` and Installing Dependencies
 
-    > Command to deactivate the virtual environment.
-    > ```sh
-    > deactivate
-    > ```
-    >
+This guide will help you create a Python virtual environment using `venv` and install dependencies from a `requirements.txt` file.
 
-    <details>
-      <summary>
-        camelot-py: to read PDF statement
-      </summary>
-      
-      - Installation via `pip`
-        ```
-        pip install camelot-py
-        ```
-      - or if you're using conda environment
-        ```
-        conda install -c conda-forge camelot-py
-        ```
-      - Detail installation please refer to `camelot-py` [Documentation](https://camelot-py.readthedocs.io/en/master/) 
-    </details>
-    <details>
-      <summary>
-        pandas: data manipulation
-      </summary>
-      
-      - Installation via `pip`
-        ```
-        pip install pandas
-        ```
-      - or if you're using conda environment
-        ```
-        conda install -c conda-forge pandas
-        ```
-      - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
-    </details>
-    <details>
-      <summary>
-        opencv-python: Handle missing / no module named cv2
-      </summary>
-      
-      - Installation via `pip`
-        ```
-        pip install opencv-python
-        ```
-      - or if you're using conda environment
-        ```
-        conda install -c conda-forge opencv
-        ```
-    </details>
-    <details>
-      <summary>
-        matplotlib: page visualization (Optional)
-      </summary>
-      
-      - Installation via `pip`
-        ```
-        pip install matplotlib
-        ```
-      - or if you're using conda environment
-        ```
-        conda install -c conda-forge matplotlib
-        ```
-      - [Visual Debug](https://camelot-py.readthedocs.io/en/master/user/advanced.html#visual-debugging) on table generation
-      - Detail installation please refer to `matplotlib` [Documentation](https://matplotlib.org/) 
-    </details>
-    <details open>
-      <summary>
-        Recommended setup:
-      </summary>
-      
-      | Installation    | Version | 
-      | --------------- | :-----: |
-      | `python`        | 3.9.12  |
-      | `camelot-py`    | 0.10.1  |
-      | `pandas`        | 1.4.3   |
-      | `opencv-python` | 4.9.0   |
-      | `matplotlib`    | 3.5.2   |
-    </details>
-3. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data` folder
-4. Run the [main.py](main.py)
+To create a virtual environment:
+
+```bash
+# Create a virtual environment (you can name it '.venv' or something else)
+python -m venv .venv
+```
+
+Then, activate the virtual environment.
+
+
+```bash
+# On Windows:
+.\.venv\Scripts\activate
+
+# On macOS/Linux:
+source .venv/bin/activate
+```
+
+Once your virtual environment is activated, install the dependencies listed in `requirements.txt` by running:
+
+```bash
+pip install -r requirements.txt
+```
+
+When you’re done working, you can deactivate the virtual environment by running:
+
+```bash
+deactivate
+```
+
+This will deactivate the current environment and return you to your system’s default Python environment.
+
+4. Packages
+
+Recommended setup
+
+| Installation    | Version | 
+| --------------- | :-----: |
+| `python`        | 3.9.12  |
+| `camelot-py`    | 0.10.1  |
+| `pandas`        | 1.4.3   |
+| `opencv-python` | 4.9.0   |
+| `matplotlib`    | 3.5.2   |
+
+<details>
+  <summary>
+    camelot-py: to read PDF statement
+  </summary>
+
+  - Installation via `pip`
+    ```
+    pip install camelot-py
+    ```
+  - or if you're using conda environment
+    ```
+    conda install -c conda-forge camelot-py
+    ```
+  - Detail installation please refer to `camelot-py` [Documentation](https://camelot-py.readthedocs.io/en/master/) 
+</details>
+<details>
+  <summary>
+    pandas: data manipulation
+  </summary>
+
+  - Installation via `pip`
+    ```
+    pip install pandas
+    ```
+  - or if you're using conda environment
+    ```
+    conda install -c conda-forge pandas
+    ```
+  - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
+</details>
+<details>
+  <summary>
+    opencv-python: Handle missing / no module named cv2
+  </summary>
+
+  - Installation via `pip`
+    ```
+    pip install opencv-python
+    ```
+  - or if you're using conda environment
+    ```
+    conda install -c conda-forge opencv
+    ```
+</details>
+<details>
+  <summary>
+    matplotlib: page visualization (Optional)
+  </summary>
+
+  - Installation via `pip`
+    ```
+    pip install matplotlib
+    ```
+  - or if you're using conda environment
+    ```
+    conda install -c conda-forge matplotlib
+    ```
+  - [Visual Debug](https://camelot-py.readthedocs.io/en/master/user/advanced.html#visual-debugging) on table generation
+  - Detail installation please refer to `matplotlib` [Documentation](https://matplotlib.org/) 
+</details>
+<br/>
+
+5. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data` folder
+
+6. Run the [main.py](main.py)
     ```
     python main.py
     ```
-5. Get your transaction table named `tng_ewallet_transactions.csv` in `output` folder.
 
-# Troubleshoot
+7. Get your transaction table named `tng_ewallet_transactions.csv` in `output` folder.
+
+## Troubleshoot
 Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  
 1. Reverse Entry (Found on [c5156d7](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/c5156d7ae697589971cae36ef3f54497dd2d3ce5))  
    - The latest transaction recorded before an older transaction. 
@@ -135,7 +178,7 @@ Some known bugs happen during the generation of the pdf transaction report by TN
 4. Other Unknown Bugs
    - Any uncaught bug will raise `ValueError: Some Entry Not Recorded Properly` and exit the code unexpectedly. Please open an issue and attach/screenshot the relevant transaction history pdf if found such case. 
 
-# Disclaimer
+## Disclaimer
 1. I don't work in [Touch 'n Go](https://www.touchngo.com.my/) company, and hence do not represent Touch 'n Go.
 2. This repository is my work to ease myself in analyzing my own expenses in Touch 'n Go e-Wallet. But you can freely use it and welcome to contribute, you are helping me to make this code more meaningful.
 3. Please consider use this code in your own responsibility, although it is not harmful at all.
