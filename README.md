@@ -8,8 +8,8 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
 
 Here're the [official instruction](https://support.tngdigital.com.my/hc/en-my/articles/360035649754-How-can-I-view-or-download-my-transaction-history) provided by Touch'n Go in TNG eWallet app. 
 
-![instruction1](./images/transaction_1.jpeg)
-![instruction2](./images/transaction_2.jpeg)
+<img src="./images/transaction_1.jpeg" width=450/>
+<img src="./images/transaction_2.jpeg" width=450/>
 
 The instruction above is little bit outdated, a newer flow as of writing time is like:
 - go to your "Transactions" in TNG eWallet app
