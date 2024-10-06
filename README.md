@@ -123,13 +123,15 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
     Recommended setup
 
-    | Installation    | Version | 
-    | --------------- | :-----: |
-    | `python`        | 3.9.12  |
-    | `camelot-py`    | 0.10.1  |
-    | `pandas`        | 1.4.3   |
-    | `opencv-python` | 4.9.0   |
-    | `matplotlib`    | 3.5.2   |
+    | Installation    | Version   | 
+    | --------------- | :-------: |
+    | `python`        | 3.9.12    |
+    | `camelot-py`    | 0.10.1    |
+    | `pandas`        | 1.4.3     |
+    | `numpy`         | 1.26.4    |
+    | `matplotlib`    | 3.5.2     |
+    | `opencv-python` | 4.10.0.84 |
+    | `PyPDF2`        | 2.12.1    |
 
     <details>
       <summary>
@@ -138,12 +140,13 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
       - Installation via `pip`
         ```
-        pip install camelot-py
+        pip install camelot-py==0.10.1
         ```
       - or if you're using conda environment
         ```
-        conda install -c conda-forge camelot-py
+        conda install -c conda-forge camelot-py==0.10.1
         ```
+      - you will need to install its dependencies ([TkInter](https://wiki.python.org/moin/TkInter) & [Ghostscript](https://www.ghostscript.com/)) before using, please refer installation step in the [Manual](https://camelot-py.readthedocs.io/en/master/user/install-deps.html)
       - Detail installation please refer to `camelot-py` [Documentation](https://camelot-py.readthedocs.io/en/master/) 
     </details>
     <details>
@@ -153,27 +156,28 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
       - Installation via `pip`
         ```
-        pip install pandas
+        pip install pandas==1.4.3
         ```
       - or if you're using conda environment
         ```
-        conda install -c conda-forge pandas
+        conda install -c conda-forge pandas==1.4.3
         ```
       - Detail installation please refer to `pandas` [Documentation](https://pandas.pydata.org/docs/index.html) 
     </details>
     <details>
       <summary>
-        opencv-python: Handle missing / no module named cv2
+        Numpy: Handle binary incompatibility for camelot
       </summary>
 
       - Installation via `pip`
         ```
-        pip install opencv-python
+        pip install numpy==1.26.4
         ```
       - or if you're using conda environment
         ```
-        conda install -c conda-forge opencv
+        conda install -c conda-forge numpy==1.26.4
         ```
+      - Detail installation please refer to `numpy` [Documentation](https://numpy.org/install/) 
     </details>
     <details>
       <summary>
@@ -182,16 +186,43 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
       - Installation via `pip`
         ```
-        pip install matplotlib
+        pip install matplotlib==3.5.2
         ```
       - or if you're using conda environment
         ```
-        conda install -c conda-forge matplotlib
+        conda install -c conda-forge matplotlib==3.5.2
         ```
       - [Visual Debug](https://camelot-py.readthedocs.io/en/master/user/advanced.html#visual-debugging) on table generation
       - Detail installation please refer to `matplotlib` [Documentation](https://matplotlib.org/) 
     </details>
-    <br/>
+    <details>
+      <summary>
+        opencv-python: Handle missing / no module named cv2
+      </summary>
+
+      - Installation via `pip`
+        ```
+        pip install opencv-python==4.10.0.84
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge opencv==4.10.084
+        ```
+    </details>
+    <details>
+      <summary>
+        PyPDF2: Handle `PdfFileReader` deprecation
+      </summary>
+
+      - Installation via `pip`
+        ```
+        pip install PyPDF2==2.12.1
+        ```
+      - or if you're using conda environment
+        ```
+        conda install -c conda-forge PyPDF2==2.12.1
+        ```
+    </details>
 
 4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data/` folder
 
