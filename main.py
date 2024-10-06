@@ -1,25 +1,16 @@
-import platform
 import pandas as pd
 import numpy as np
 import camelot
 import time
-from enum import Enum
+import os
 
-class SystemPlatform(Enum):
-    Windows = 1
-    Darwin = 2
-    Linux = 3
-
-# Add timestamp right at the end of the filename when export to CSV.
+# Add timestamp right at the end of the filename when exporting to CSV.
 # This is to skip file check permission when replacing the file.
 time_str = time.strftime("%Y%m%d_%H%M%S")
 
-if platform.system() == SystemPlatform.Darwin.name or platform.system() == SystemPlatform.Linux.name:
-    PDF_LINK = r'./data/tng_ewallet_transactions.pdf'
-    CSV_LINK = rf'./output/tng_ewallet_transactions_{time_str}.csv'
-elif platform.system() == SystemPlatform.Windows.name:
-    PDF_LINK = r'.\data\tng_ewallet_transactions.pdf'
-    CSV_LINK = rf'.\output\tng_ewallet_transactions_{time_str}.csv'
+# Detect platform and set file paths accordingly
+PDF_LINK = os.path.join('data', 'tng_ewallet_transactions.pdf')
+CSV_LINK = os.path.join('output', f'tng_ewallet_transactions_{time_str}.csv')
 
 # Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
 table = camelot.read_pdf(PDF_LINK, pages='all', flavor='stream',
@@ -32,7 +23,7 @@ df = (
     pd
     .concat([tbl.df for tbl in table._tables], ignore_index=True)
     .set_axis(['Date', 'Status', 'Transaction Type', 'Reference', 'Description', 'Details', 'Amount (RM)', 'Wallet Balance'], axis=1)
-    .query('Date.str.contains(r"^\d|^$", na=True) & ~Reference.str.contains(r"^$")', engine='python')
+    .query(r'Date.str.contains(r"^\d|^$", na=True) & ~Reference.str.contains(r"^$")', engine='python')
     .assign(idx=lambda x: (~x.Date.str.contains('^$')).cumsum())
     .groupby('idx')
     .apply(lambda x: x.apply(lambda y: ' '.join(y.fillna('').astype(str))).str.strip())
@@ -123,7 +114,7 @@ if len(idx) != 0:
 df1 = (
     df1
     .assign(
-        Description=lambda x: x['Description'].str.replace('_\d{5,}', '', regex=True),
+        Description=lambda x: x['Description'].str.replace(r'_\d{5,}', '', regex=True),
         prev_bal=lambda x: x['Wallet Balance'].shift(-1),
         **{
             'Transaction Type': lambda x: np.select(
