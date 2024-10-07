@@ -67,11 +67,25 @@ df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
 #     .reset_index(drop=True)
 # )
 
-# Bug: Money Packet Received & Direct Credit not displaying true bal
-for i, row in df1.loc[::-1].iterrows():
+# Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
+# 1. Locating the problematic rows
+# 2. Find nearest Non-quick-reload-payment before* the transaction
+#    Its impossible to have Quick Reload Payment before* the money receive entries
+# 3. After most of the money receive transaction fixed, fix the first* n of money receive entries
+# * is in the reversing order
+for i, row in df1.iloc[-2::-1].iterrows():
     if row['Transaction Type'] in ['Money Packet Received', 'Direct Credit']:
-        bal = df1.at[i+1, 'Wallet Balance']
+        # find next balance, skip if next j rows are Quick Reload Payment
+        j = i+1
+        while df1.at[j, 'Description'] == 'Quick Reload Payment (via GO+ Balance)':
+            j += 1
+        bal = df1.at[j, 'Wallet Balance']
         df1.at[i, 'Wallet Balance'] = bal + row['Amount (RM)']
+
+i = (~df1['Transaction Type'][::-1].isin(['Money Packet Received', 'Direct Credit'])).idxmax() + 1
+while i < df1.shape[0]:
+    df1.at[i, 'Wallet Balance'] = df1.at[i-1, 'Wallet Balance'] - df1.at[i-1, 'Amount (RM)']
+    i += 1
 
 # Bug: Get index which causing reversing entries
 def check_reverse_entry(df1):
