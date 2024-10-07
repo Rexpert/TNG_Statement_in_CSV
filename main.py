@@ -58,11 +58,25 @@ df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
 #     .reset_index(drop=True)
 # )
 
-# Bug: Money Packet Received & Direct Credit not displaying true bal
-for i, row in df1.loc[::-1].iterrows():
+# Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
+# 1. Locating the problematic rows
+# 2. Find nearest Non-quick-reload-payment before* the transaction
+#    Its impossible to have Quick Reload Payment before* the money receive entries
+# 3. After most of the money receive transaction fixed, fix the first* n of money receive entries
+# * is in the reversing order
+for i, row in df1.iloc[-2::-1].iterrows():
     if row['Transaction Type'] in ['Money Packet Received', 'Direct Credit']:
-        bal = df1.at[i+1, 'Wallet Balance']
+        # find next balance, skip if next j rows are Quick Reload Payment
+        j = i+1
+        while df1.at[j, 'Description'] == 'Quick Reload Payment (via GO+ Balance)':
+            j += 1
+        bal = df1.at[j, 'Wallet Balance']
         df1.at[i, 'Wallet Balance'] = bal + row['Amount (RM)']
+
+i = (~df1['Transaction Type'][::-1].isin(['Money Packet Received', 'Direct Credit'])).idxmax() + 1
+while i < df1.shape[0]:
+    df1.at[i, 'Wallet Balance'] = df1.at[i-1, 'Wallet Balance'] - df1.at[i-1, 'Amount (RM)']
+    i += 1
 
 # Bug: Get index which causing reversing entries
 def check_reverse_entry(df1):
@@ -72,8 +86,8 @@ def check_reverse_entry(df1):
             prev_bal=lambda x: x['Wallet Balance'].shift(-1),
             **{
                 'Amount (RM)': lambda x: np.select([
-                    np.round(x['prev_bal']+x['Amount (RM)'], 2)==x['Wallet Balance'],
-                    np.round(x['prev_bal']-x['Amount (RM)'], 2)==x['Wallet Balance']
+                    np.round(x['prev_bal']+x['Amount (RM)'], 2)==np.round(x['Wallet Balance'],2),
+                    np.round(x['prev_bal']-x['Amount (RM)'], 2)==np.round(x['Wallet Balance'],2)
                 ], [
                     x['Amount (RM)'],
                     -x['Amount (RM)']
@@ -84,29 +98,55 @@ def check_reverse_entry(df1):
         .index
         .to_list()
     )
-idx = check_reverse_entry(df1)
 
-# Make correction on reversing entries
+# Bug: Attempt to fix reversing entries
+# Only trigger when all condition are met:
+# 1. Same date
+# 2. Description = Quick Reload Payment (via GO+ Balance), follow by another transaction
+# 3. With the same amount in a row
+# 4. Wallet Balance is reversed
+# Check reversed entry again after this attempt
 new_idx = []
-for k,v in enumerate(idx):
-    if k != 0:
-        if (diff := (v - idx[k-1])) % 2 == 0:
-            for i in range(int(diff/2)):
-                new_idx.append((v-i*2-1, v-i*2))
-                new_idx.append((v-i*2, v-i*2-1))
-            idx.remove(v)
-        elif idx[k+1] - idx[k-1] == 2:
-            new_idx.append((v, v+1))
-            new_idx.append((v+1, v))
-            idx.remove(idx[k-1])
-            idx.remove(v)
-        else:
-            raise ValueError('Some Entry Not Recorded Properly')
+for i, row in df1.iterrows():
+    if (
+        0 < i < df1.shape[0]-1 and
+        row['Description'] == 'Quick Reload Payment (via GO+ Balance)' and 
+        row['Date'] == df1.loc[i+1, 'Date'] and
+        row['Amount (RM)'] == df1.loc[i+1, 'Amount (RM)'] and
+        np.round(row['Wallet Balance'] - row['Amount (RM)'],2) == np.round(df1.loc[i+1, 'Wallet Balance'],2) and
+        # row['Amount (RM)'] != df1.loc[i-1, 'Amount (RM)'] and
+        np.round(df1.loc[i-1, 'Wallet Balance'] + df1.loc[i-1, 'Amount (RM)'],2) != np.round(row['Wallet Balance'],2)
+    ) :
+        new_idx.append((i, i+1))
+        new_idx.append((i+1, i))
 
 df1 = df1.rename(dict(new_idx)).sort_index()
-
-# Rechecking reversing entries
 idx = check_reverse_entry(df1)
+check = 0
+while len(idx) != 0:
+    if check >= 3:
+        raise ValueError('Some Entry Not Recorded Properly')
+    # Make correction on reversing entries
+    new_idx = []
+    for k,v in enumerate(idx):
+        if k != 0:
+            if (diff := (v - idx[k-1])) % 2 == 0:
+                for i in range(int(diff/2)):
+                    new_idx.append((v-i*2-1, v-i*2))
+                    new_idx.append((v-i*2, v-i*2-1))
+                idx.remove(v)
+            elif idx[k+1] - idx[k-1] == 2:
+                new_idx.append((v, v+1))
+                new_idx.append((v+1, v))
+                idx.remove(idx[k-1])
+                idx.remove(v)
+            else:
+                raise ValueError('Some Entry Not Recorded Properly')
+    df1 = df1.rename(dict(new_idx)).sort_index()
+    # Rechecking reversing entries
+    idx = check_reverse_entry(df1)
+    check = check + 1
+
 if len(idx) != 0:
     raise ValueError('Some Entry Not Recorded Properly')
 
