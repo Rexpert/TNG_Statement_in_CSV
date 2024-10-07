@@ -104,7 +104,12 @@ def check_reverse_entry(df1):
 # 1. Same date
 # 2. Description = Quick Reload Payment (via GO+ Balance), follow by another transaction
 # 3. With the same amount in a row
-# 4. Wallet Balance is reversed
+# 4. Must be a positive trasaction: 
+#    Current Balance - Current Amount = Previous Balance
+# 5. Next transaction must be a negative transaction:
+#    A. Flag if Next Amount + Next Balance != Current Balance 
+#    or 
+#    B. Flag if Next transaction is Quick Reload Payment (via GO+ Balance)
 # Check reversed entry again after this attempt
 new_idx = []
 for i, row in df1.iterrows():
@@ -115,7 +120,8 @@ for i, row in df1.iterrows():
         row['Amount (RM)'] == df1.loc[i+1, 'Amount (RM)'] and
         np.round(row['Wallet Balance'] - row['Amount (RM)'],2) == np.round(df1.loc[i+1, 'Wallet Balance'],2) and
         # row['Amount (RM)'] != df1.loc[i-1, 'Amount (RM)'] and
-        np.round(df1.loc[i-1, 'Wallet Balance'] + df1.loc[i-1, 'Amount (RM)'],2) != np.round(row['Wallet Balance'],2)
+        (np.round(df1.loc[i-1, 'Wallet Balance'] + df1.loc[i-1, 'Amount (RM)'],2) != np.round(row['Wallet Balance'],2) or 
+        df1.loc[i-1, 'Description'] == 'Quick Reload Payment (via GO+ Balance)')
     ) :
         new_idx.append((i, i+1))
         new_idx.append((i+1, i))
