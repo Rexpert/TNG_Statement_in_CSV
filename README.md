@@ -264,4 +264,4 @@ Some known bugs happen during the generation of the pdf transaction report by TN
 2. This repository is my work to ease myself in analyzing my own expenses in Touch 'n Go e-Wallet. But you can freely use it and welcome to contribute, you are helping me to make this code more meaningful.
 3. Please consider use this code in your own responsibility, although it is not harmful at all.
 
-MIT [@Rexpert](https://github.com/Rexpert) 2022
+MIT [@Rexpert](https://github.com/Rexpert) 2022 - 2024
