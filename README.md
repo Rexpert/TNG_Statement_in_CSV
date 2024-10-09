@@ -223,7 +223,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
     </details>
     <details>
       <summary>
-        PyPDF2: Handle `PdfFileReader` deprecation
+        PyPDF2: Handle PdfFileReader deprecation
       </summary>
 
       - Installation via `pip`
