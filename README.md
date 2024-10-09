@@ -237,7 +237,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  
 1. Reverse Entry (Found on [c5156d7](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/c5156d7ae697589971cae36ef3f54497dd2d3ce5))  
    - The latest transaction recorded before an older transaction. 
-   - This usually happens during the [Quick Reload Payment](https://www.touchngo.com.my/goplus/#:~:text=What%20is%20Quick%20Reload%20Payment) via Go+. In this scenario, the payment is recorded first, then the reload occurs after.
+   - This usually happens during the [Quick Reload Payment](https://support.tngdigital.com.my/hc/en-my/articles/36447357669017-What-is-Quick-Reload-Payment) via Go+. In this scenario, the payment is recorded first, then the reload occurs after.
    - I have implemented an autofix in the code to address this.
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/067e6ffe-28a4-45d0-a566-4219587cc18b)
