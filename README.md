@@ -1,6 +1,16 @@
 # TNG Statement in CSV
 This code builds a CSV table that records all transactions within TNG e-Wallet from its statement.
 
+- [How to download TNG Ewallet Statement](#how-to-download-tng-ewallet-statement)
+- [Usage](#usage)
+  - [Clone Repo](#usage)
+  - [Managing virtual environment](#virtual-env-mgmt)
+  - [Dependencies](#dependencies)
+  - [Run Python & Get your CSV](#run-python)
+- [Troubleshoot](#troubleshoot)
+  - [Reversing Entries](#reversing)
+  - [Money Packets 2023 Balance](#mp-balance)
+  - [Missing Direct Credit Entries](#dc-entries)
 
 ## How to download TNG Ewallet Statement
 
@@ -30,6 +40,8 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
     ```
     git clone https://github.com/Rexpert/TNG_Statement_in_CSV.git
     ```
+
+<a id="virtual-env-mgmt"></a>
 
 2. It is recommended to setup virtual environment before installing the dependencies. You may choose either `venv` or `conda` to manage your virtual environment
 
@@ -68,7 +80,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
       pip install -r requirements.txt
       ```
       
-      Alternatively you may install the package manually using the method mentioned in [3. Packages](#packages)
+      Alternatively you may install the package manually using the method mentioned in [3. Dependencies](#dependencies)
 
       When you’re done working, you can deactivate the virtual environment by running:
 
@@ -107,7 +119,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
       pip install -r requirements.txt
       ```
       
-      Alternatively you may install the package manually using the method mentioned in [3. Packages](#packages)
+      Alternatively you may install the package manually using the method mentioned in [3. Dependencies](#dependencies)
       
       To leave the `tng` environment
       ```bash
@@ -117,9 +129,9 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
       
     </details>
 
-<a id='packages'></a>
+<a id="dependencies"></a>
 
-3. Packages
+3. Dependencies
 
     Recommended setup
 
@@ -224,6 +236,8 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
         ```
     </details>
 
+<a id="run-python"></a>
+
 4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data/` folder
 
 5. Run the [main.py](main.py)
@@ -235,20 +249,21 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
 ## Troubleshoot
 Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  
+<a id="reversing"></a>
 1. Reverse Entry (Found on [c5156d7](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/c5156d7ae697589971cae36ef3f54497dd2d3ce5))  
    - The latest transaction recorded before an older transaction. 
    - This usually happens during the [Quick Reload Payment](https://support.tngdigital.com.my/hc/en-my/articles/36447357669017-What-is-Quick-Reload-Payment) via Go+. In this scenario, the payment is recorded first, then the reload occurs after.
    - I have implemented an autofix in the code to address this.
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/067e6ffe-28a4-45d0-a566-4219587cc18b)
-
+<a id="mp-balance"></a>
 2. Money Packet Balance (Found on [8fe26a5](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/8fe26a5b2e9884737b0a6bda975054a0f44aaaea))
    - The wallet balance of the money packet entries unexpectedly equals the amount of money packet received.
    - This is happened in the CNY 2023 when the [Money Packet Campaign](https://www.touchngo.com.my/faq/snatch-ang-pow-campaign/) took place.
    - I have implemented an autofix in the code to address this.
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/aa06e93d-480e-4ed1-aa93-d4cbc036b461)
-
+<a id="dc-entries"></a>
 3. Missing Direct Credit entry (Found on [362cc8a](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/362cc8a1362859e0be5d71780b8c2a10ddb62527))
    - Direct Credit entries are not recorded in the transaction history
    - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. However, they can be viewed in the TNG e-Wallet app's history.
