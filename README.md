@@ -266,8 +266,21 @@ Some known bugs happen during the generation of the pdf transaction report by TN
 <a id="dc-entries"></a>
 3. Missing Direct Credit entry (Found on [362cc8a](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/362cc8a1362859e0be5d71780b8c2a10ddb62527))
    - Direct Credit entries are not recorded in the transaction history
-   - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. However, they can be viewed in the TNG e-Wallet app's history.
-   - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised.
+   - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. 
+   - However, they can be viewed in the TNG e-Wallet app's history：
+     - In the `transaction history` page, filter the transaction by `Others` > `Direct Credit`
+     <kbd><img src="images/dc_entries.gif" width=450></img></kbd>
+   - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised:
+     - Heading to function `impute_dc_entries` in [`main.py`](https://github.com/Rexpert/TNG_Statement_in_CSV/blob/main/main.py)
+     - Input the `Direct Credit` entries that obtained in the TNG eWallet App
+     - Then, uncomment the following line:
+       ```Python
+       df1 = impute_direct_credit(df1)
+       ```
+     - After that, run `main.py` as usual:
+       ```bash
+       python main.py
+       ```
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/f56ea6cd-f798-469a-81db-577d83f8e71b)
 
