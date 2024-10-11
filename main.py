@@ -59,13 +59,17 @@ def impute_direct_credit(df1):
 
 
 def fix_money_receive_balance(df1):
-    # 1. Locating the problematic rows
+    # 1. Locating the problematic rows:
+    #    - Direct Credit Entries
+    #    - Money Packet Received before 2024
     # 2. Find previous Non-quick-reload-payment before* the transaction
     #    Its impossible to have Quick Reload Payment before* the money receive entries
     # 3. After most of the money receive transaction fixed, fix the first* n of money receive entries
     # * is in the reversing order
     for i, row in df1.iloc[-2::-1].iterrows():
-        if row['Transaction Type'] in ['Money Packet Received', 'Direct Credit']:
+        if (row['Transaction Type'] == 'Direct Credit' or 
+            (row['Transaction Type'] == 'Money Packet Received' and 
+                row['Date'] < pd.Timestamp('2024-01-01'))):
             # find next balance, skip if next j rows are Quick Reload Payment
             j = i+1
             while df1.at[j, 'Description'] == 'Quick Reload Payment (via GO+ Balance)':
@@ -73,9 +77,20 @@ def fix_money_receive_balance(df1):
             bal = df1.at[j, 'Wallet Balance']
             df1.at[i, 'Wallet Balance'] = bal + row['Amount (RM)']
             
-    i = (~df1['Transaction Type'][::-1].isin(['Money Packet Received', 'Direct Credit'])).idxmax() + 1
+    i = ((df1['Transaction Type'].ne('Direct Credit') | 
+            (df1['Transaction Type'].ne('Money Packet Received') &
+                df1['Date'].lt(pd.Timestamp('2024-01-01'))))
+        .iloc[::-1]
+        .idxmax()) + 1
+    sign = 1
+    # No idea what is the Transaction Type for using specific TNG Service like e-Mas / e-Trade / Cash Loan / Bill / Parking etc
+    negative_transaction = ['Payment', 'Transfer to Wallet', 'RFID Payment', 'DuitNow QR TNGD', 'DuitNow QR', 'eWallet Cash Out', 'DUITNOW_TRANS FERTO', 'DUITNOW_TRANSFERTO']
+    if df1.at[i-1, 'Transaction Type'] in negative_transaction:
+        sign = -1
     while i < df1.shape[0]:
-        df1.at[i, 'Wallet Balance'] = df1.at[i-1, 'Wallet Balance'] - df1.at[i-1, 'Amount (RM)']
+        df1.at[i, 'Wallet Balance'] = df1.at[i-1, 'Wallet Balance'] - df1.at[i-1, 'Amount (RM)']*sign
+        # Must be positive transaction (Direct Credit) for the rest of transaction
+        sign = 1
         i += 1
     return df1
 

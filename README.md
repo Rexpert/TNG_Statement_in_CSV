@@ -257,12 +257,14 @@ Some known bugs happen during the generation of the pdf transaction report by TN
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/067e6ffe-28a4-45d0-a566-4219587cc18b)
 <a id="mp-balance"></a>
-2. Money Packet Balance (Found on [8fe26a5](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/8fe26a5b2e9884737b0a6bda975054a0f44aaaea))
+2. Money Packet Balance (Found on [8fe26a5](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/8fe26a5b2e9884737b0a6bda975054a0f44aaaea)) (Fixed on 2024)
    - The wallet balance of the money packet entries unexpectedly equals the amount of money packet received.
    - This is happened in the CNY 2023 when the [Money Packet Campaign](https://www.touchngo.com.my/faq/snatch-ang-pow-campaign/) took place.
    - I have implemented an autofix in the code to address this.
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/aa06e93d-480e-4ed1-aa93-d4cbc036b461)
+   - This bug was fixed on the pdf statement after CNY 2024:
+     ![image](./images/money_packet_fixed.png)
 <a id="dc-entries"></a>
 3. Missing Direct Credit entry (Found on [362cc8a](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/362cc8a1362859e0be5d71780b8c2a10ddb62527))
    - Direct Credit entries are not recorded in the transaction history
