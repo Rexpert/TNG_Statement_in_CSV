@@ -32,7 +32,7 @@ After wait for awhile you should receive an email from Touch'n Go as shown below
 
 ![email](./images/tng_email.png)
 
-Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf**, and put this file into `data/` folder of this project.
+Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf**, and put this file into `pdf/` folder of this project.
 
 
 ## Usage
@@ -238,14 +238,14 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
 <a id="run-python"></a>
 
-4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `data/` folder
+4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `pdf/` folder
 
 5. Run the [main.py](main.py)
     ```
     python main.py
     ```
 
-6. Get your transaction table named `tng_ewallet_transactions.csv` in `output/` folder.
+6. Get your transaction table named `tng_ewallet_transactions.csv` in `csv/` folder.
 
 ## Troubleshoot
 Some known bugs happen during the generation of the pdf transaction report by TNG, but the only thing we can do is to manually make correction on the data:  

@@ -9,8 +9,8 @@ import os
 time_str = time.strftime(r'%Y%m%d_%H%M%S')
 
 # Set file paths
-PDF_LINK = os.path.join('data', 'tng_ewallet_transactions.pdf')
-CSV_LINK = os.path.join('output', f'tng_ewallet_transactions_{time_str}.csv')
+PDF_LINK = os.path.join('pdf', 'tng_ewallet_transactions.pdf')
+CSV_LINK = os.path.join('csv', f'tng_ewallet_transactions_{time_str}.csv')
 
 def read_pdf_table(pdf_link):
     # Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined

@@ -1,5 +1,5 @@
-data/tng_ewallet_transactions*.pdf
-output/tng_ewallet_transactions*.csv
+pdf/tng_ewallet_transactions*.pdf
+csv/tng_ewallet_transactions*.csv
 
 # Ignore folder for virtual environment.
 /*venv
