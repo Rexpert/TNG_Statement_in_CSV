@@ -2,6 +2,8 @@
 This code builds a CSV table that records all transactions within TNG e-Wallet from its statement.
 
 - [How to download TNG Ewallet Statement](#how-to-download-tng-ewallet-statement)
+  - [Download PDF via TNG eWallet App](#download-the-pdf-statement-via-tng-ewallet-app)
+  - [Download PDF via TNG ePortal](#download-the-pdf-statement-via-tng-eportal)
 - [Usage](#usage)
   - [Clone Repo](#usage)
   - [Managing virtual environment](#virtual-env-mgmt)
@@ -16,6 +18,7 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
 
 > Do not go to [Touch'n Go Web Portal](https://tngportal.touchngo.com.my/#login), it's unrelated to TNG Ewallet
 
+### Download the PDF Statement via TNG eWallet App
 Here're the [official instruction](https://support.tngdigital.com.my/hc/en-my/articles/360035649754-How-can-I-view-or-download-my-transaction-history) provided by Touch'n Go in TNG eWallet app. 
 
 <kbd><img src="./images/transaction_1.jpeg" width=450/></kbd>
@@ -34,6 +37,12 @@ After wait for awhile you should receive an email from Touch'n Go as shown below
 
 Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf**, and put this file into `pdf/` folder of this project.
 
+### Download the PDF Statement via TNG ePortal
+Here're the instruction to download the newer version of PDF Statement via TNG ePortal:
+1. Log in to the [TNG ePortal](https://eportal.touchngo.com.my/login) by scaning QR Code using your TNG eWallet APP.
+2. Click `See More` button navigate to the `My Transactions` page.
+3. Click the `Download` button to download the your statement.
+4. Place the pdf statement under the `pdf/` folder of this project
 
 ## Usage
 1. Clone this repo to your local.
@@ -238,7 +247,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
 <a id="run-python"></a>
 
-4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `pdf/` folder
+4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `pdf/` folder. By default, the program is designed to feed in the latest pdf with the fuzzy named: `*transactions*.pdf`
 
 5. Run the [main.py](main.py)
     ```
@@ -286,7 +295,12 @@ Some known bugs happen during the generation of the pdf transaction report by TN
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/f56ea6cd-f798-469a-81db-577d83f8e71b)
 
-4. Other Unknown Bugs
+4. GO+ Daily Earning showing 2 decimal places
+   - In the newer version of TNG Statement [downloaded via TNG ePortal](#download-the-pdf-statement-via-tng-eportal), the GO+ Daily Earning showing only 2 decimal places instead of 4 decimal places in the TNG Statement [downloaded via TNG eWallet APP](#download-the-pdf-statement-via-tng-ewallet-app)
+   - This discrepancy may cause rounding error when summing up the Wallet Balance.
+   - Currently, we do not have fix on this issue.
+
+5. Other Unknown Bugs
    - Any uncaught bug will raise `ValueError: Some Entry Not Recorded Properly` and exit the code unexpectedly. Please open an issue and attach/screenshot the relevant transaction history pdf if found such case. 
 
 ## Disclaimer
