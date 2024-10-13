@@ -83,3 +83,26 @@ df2 = (
 pd.concat([df1, df2]).sort_values('Date', kind='mergesort').to_csv(r'.\output\tng_ewallet_transactions.csv', index=False, encoding='utf-8')
 
 xlsx.close()
+
+
+(
+    df
+    .iloc[:-2]
+    .set_axis(['Details', 'Transaction Type', 'Reference No.', 'Amount (RM)'], axis=1)
+    .loc[lambda x: x.index > x.Details.eq('Details').idxmax(), :]
+    .assign(
+        Date = lambda x: pd.to_datetime(x.Details, format=r'%d/%m/%Y %H:%M', errors='coerce'),
+        idx  = lambda x: x.Date.notna().cumsum().shift(fill_value=0),
+        Details = lambda x: np.where(x.Date.isna(),x.Details,'')
+    )
+    .groupby('idx')
+    .apply(lambda x: x.apply(lambda y: ' '.join(y.dropna().astype(str))).str.strip())
+    .reset_index(drop=True)
+    .loc[:, ['Date', 'Transaction Type', 'Details', 'Amount (RM)']]
+    .assign(
+        Date = lambda x: pd.to_datetime(x.Date, format=r'%Y-%m-%d %H:%M:%S').dt.date,
+        **{
+            'Amount (RM)': lambda x: x['Amount (RM)'].str.replace('RM', '').astype(float)
+        }
+    )
+)

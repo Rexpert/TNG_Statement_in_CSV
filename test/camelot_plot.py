@@ -1,11 +1,15 @@
 import matplotlib.pyplot as plt
 from matplotlib.ticker import MultipleLocator
 import camelot
+import os
 
-table = camelot.read_pdf(r'.\data\tng_ewallet_transactions.pdf', pages='44', flavor='stream',
-                        table_areas=['20,600,820,50'],
-                        columns=['80,140,230,294,460,660,720'], 
-                        split_text=True, strip_text='\n')
+# PDF_LINK = os.path.join('pdf', 'tng_ewallet_transactions.pdf')
+PDF_LINK = os.path.join('pdf', 'transactions-13-10-2024-154730.pdf')
+
+table = camelot.read_pdf(PDF_LINK, pages='2', flavor='stream',
+            table_regions=['40,710,560,0'], table_areas=['40,710,560,0'],
+            columns=['170,295,423'], 
+            split_text=True, strip_text='\n')
 
 table._tables[0].df
 

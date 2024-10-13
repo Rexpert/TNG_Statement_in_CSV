@@ -4,23 +4,47 @@ import camelot
 import time
 import os
 
+from glob import glob
+from PyPDF2 import PdfFileReader
+
 # Add timestamp right at the end of the filename when exporting to CSV.
 # This is to skip file check permission when replacing the file.
 time_str = time.strftime(r'%Y%m%d_%H%M%S')
 
 # Set file paths
-PDF_LINK = os.path.join('pdf', 'tng_ewallet_transactions.pdf')
+# Get the latest Transaction PDF File
+pdfs = glob(os.path.join('pdf', '*transactions*.pdf'))
+PDF_LINK = max(pdfs, key=os.path.getctime)
 CSV_LINK = os.path.join('csv', f'tng_ewallet_transactions_{time_str}.csv')
 
-def read_pdf_table(pdf_link):
+def check_pdf_version(pdf_link):
+    with open(pdf_link, 'rb') as f:
+        pdf = PdfFileReader(f)
+        pdf_producer = pdf.getDocumentInfo()['/Producer']
+    if 'iText' in pdf_producer:
+        version = 1
+    elif 'dompdf' in pdf_producer:
+        version = 2
+    else:
+        raise ValueError('Unable to detect PDF Version')
+    return version
+
+
+def read_pdf_table(pdf_link, version):
+    if version == 1:
+        regions = ['20,600,820,50']
+        columns = ['80,140,230,294,460,660,720']
+    else:
+        regions = ['40,710,560,0']
+        columns = ['170,295,423']
     # Read PDF Statement into a table collection, the areas/regions and columns separators is self-defined
     return camelot.read_pdf(pdf_link, pages='all', flavor='stream',
-        table_regions=['20,600,820,50'], table_areas=['20,600,820,50'], 
-        columns=['80,140,230,294,460,660,720'], 
+        table_regions=regions, table_areas=regions, 
+        columns=columns, 
         split_text=True, strip_text='\n')
 
 
-def clean_tables(table):
+def v1_df_clean_tables(table):
     # Merge all tables and clean the data
     return (
         pd
@@ -223,32 +247,81 @@ def df2_final_cleaning(df2):
     )
 
 
-if __name__ == '__main__':
-    table = read_pdf_table(PDF_LINK)
-    df = clean_tables(table)
-    
-    # Separate the transactions with normal trx (df1) and GO+ trx (df2)
-    df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
-    df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
-    
-    # Bug: Direct Credit Entry missing
-    # Uncomment this section to add missing data
-    # df1 = impute_direct_credit(df1)
-    
-    # Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
-    df1 = fix_money_receive_balance(df1)
-    
-    # Bug: Fix reversing entries
-    df1 = fix_reversing_entries(df1)
-    
-    # Final cleaning
-    df1 = df1_final_cleaning(df1)
-    df2 = df2_final_cleaning(df2)
-
-    # Merge both trxs and export to csv
-    (
+def v2_df_clean_table(table):
+    dfs = []
+    for tbl in table._tables:
+        df = (
+            tbl.df
+            .iloc[:-2]
+            .set_axis(['Details', 'Transaction Type', 'Reference No.', 'Amount (RM)'], axis=1)
+            .loc[lambda x: x.index > x.Details.eq('Details').idxmax(), :]
+        )
+        dfs.append(df)
+    df = (
         pd
-        .concat([df1, df2])
-        .sort_values('Date', kind='mergesort')
-        .to_csv(CSV_LINK, index=False,  encoding='utf-8')
+        .concat(dfs, ignore_index=True)
+        .assign(
+            Date = lambda x: pd.to_datetime(x.Details, format=r'%d/%m/%Y %H:%M', errors='coerce'),
+            idx  = lambda x: x.Date.notna().cumsum().shift(fill_value=0),
+            Details = lambda x: np.where(x.Date.isna(),x.Details,'')
+        )
+        .groupby('idx')
+        .apply(lambda x: x.apply(lambda y: ' '.join(y.dropna().astype(str))).str.strip())
+        .reset_index(drop=True)
+        .loc[:, ['Date', 'Transaction Type', 'Details', 'Amount (RM)']]
+        .assign(
+            Date = lambda x: pd.to_datetime(x.Date, format=r'%Y-%m-%d %H:%M:%S').dt.date,
+            **{
+                'Amount (RM)': lambda x: x['Amount (RM)'].str.replace('RM', '').astype(float)
+            }
+        )
     )
+    # Remove "GO+ Quick Cash In" & "eWallet Cash Out" pair
+    for i, row in df.iterrows():
+        if (row['Details'] == 'GO+ Quick Cash In' and 
+            df.at[i+1, 'Details'] == 'eWallet Cash Out' and 
+            np.round(row['Amount (RM)'],2) == np.round(-df.at[i+1, 'Amount (RM)'],2)):
+            df.at[i, 'Amount (RM)'] = np.nan
+            df.at[i+1, 'Amount (RM)'] = np.nan
+    return (
+        df
+        .query('Details != "Quick Reload Payment"')
+        .dropna()
+        .iloc[::-1]
+    )
+    
+
+if __name__ == '__main__':
+    version = check_pdf_version(PDF_LINK)
+    table = read_pdf_table(PDF_LINK, version)
+    
+    if version == 1:
+        df = v1_df_clean_tables(table)
+        # Separate the transactions with normal trx (df1) and GO+ trx (df2)
+        df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
+        df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
+        
+        # Bug: Direct Credit Entry missing
+        # Uncomment this section to add missing data
+        # df1 = impute_direct_credit(df1)
+        
+        # Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
+        df1 = fix_money_receive_balance(df1)
+        
+        # Bug: Fix reversing entries
+        df1 = fix_reversing_entries(df1)
+        
+        # Final cleaning
+        df1 = df1_final_cleaning(df1)
+        df2 = df2_final_cleaning(df2)
+
+        # Merge both trxs and export to csv
+        (
+            pd
+            .concat([df1, df2])
+            .sort_values('Date', kind='mergesort')
+            .to_csv(CSV_LINK, index=False,  encoding='utf-8')
+        )
+    else:
+        df = v2_df_clean_table(table)
+        df.to_csv(CSV_LINK, index=False,  encoding='utf-8')

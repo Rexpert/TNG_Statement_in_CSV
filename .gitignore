@@ -1,4 +1,5 @@
 pdf/tng_ewallet_transactions*.pdf
+pdf/transactions*.pdf
 csv/tng_ewallet_transactions*.csv
 
 # Ignore folder for virtual environment.
