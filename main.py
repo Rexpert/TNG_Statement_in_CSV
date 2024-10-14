@@ -320,7 +320,7 @@ if __name__ == '__main__':
         # Merge both trxs and export to csv
         (
             pd
-            .concat([df1, df2])
+            .concat([df2, df1])
             .sort_values('Date', kind='mergesort')
             .to_csv(CSV_LINK, index=False,  encoding='utf-8')
         )
