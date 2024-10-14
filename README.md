@@ -280,15 +280,15 @@ Some known bugs happen during the generation of the pdf transaction report by TN
    - Direct Credit entries are not recorded in the transaction history
    - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. 
    - However, they can be viewed in the TNG e-Wallet app's history：
-     - In the `transaction history` page, filter the transaction by `Others` > `Direct Credit`
+     - In the `transaction history` page, filter the transaction by `Others` > `Direct Credit`  
      <kbd><img src="images/dc_entries.gif" width=450></img></kbd>
    - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised:
-     - Heading to function `impute_dc_entries` in [`main.py`](https://github.com/Rexpert/TNG_Statement_in_CSV/blob/main/main.py)
-     - Input the `Direct Credit` entries that obtained in the TNG eWallet App
-     - Then, uncomment the following line:
-       ```Python
-       df1 = impute_direct_credit(df1)
-       ```
+     - Heading to [`missing_data/missing_data.csv`](https://github.com/Rexpert/TNG_Statement_in_CSV/blob/main/missing_data/missing_data.csv)
+     - Input the `Direct Credit` entries that obtained in the TNG eWallet App as the [example](https://github.com/Rexpert/TNG_Statement_in_CSV/blob/main/missing_data/example_missing_data.csv) shown:
+       | Date      | Transaction Type | Description                        | Amount (RM) |
+       | --------- | ---------------- | ---------------------------------- | ----------: |
+       | 12/9/2023 | Direct Credit    | ADVANCED TECHNOLOGIES PTE LTD (EC) | 0.5         |
+       | ...       | ...              | ...                                | ...         |
      - After that, run `main.py` as usual:
        ```bash
        python main.py
