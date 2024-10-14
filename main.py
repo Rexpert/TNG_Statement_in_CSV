@@ -16,6 +16,7 @@ time_str = time.strftime(r'%Y%m%d_%H%M%S')
 pdfs = glob(os.path.join('pdf', '*transactions*.pdf'))
 PDF_LINK = max(pdfs, key=os.path.getctime)
 CSV_LINK = os.path.join('csv', f'tng_ewallet_transactions_{time_str}.csv')
+MISSING_DATA_LINK = os.path.join('missing_data', 'missing_data.csv')
 
 def check_pdf_version(pdf_link):
     with open(pdf_link, 'rb') as f:
@@ -67,13 +68,15 @@ def v1_df_clean_tables(table):
 
 
 def impute_direct_credit(df1):
-    dc_entry = [{
-        'Date': pd.Timestamp('2023-09-12'),
-        'Transaction Type': 'Direct Credit',
-        'Description': 'ADVANCED TECHNOLOGIES PTE LTD (EC)',
-        'Amount (RM)': 0.5,
-        'Wallet Balance': 0.5
-    }]
+    dc_entry = (
+        pd.read_csv(MISSING_DATA_LINK)
+        .assign(
+            Date=lambda x: pd.to_datetime(x.Date, format=r'%d/%m/%Y'),
+            **{
+                'Wallet Balance': lambda x: x['Amount (RM)']
+            })
+        .dropna()
+    )
     return (
         pd
         .concat([df1, pd.DataFrame(dc_entry)], ignore_index=True)
@@ -302,8 +305,7 @@ if __name__ == '__main__':
         df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
         
         # Bug: Direct Credit Entry missing
-        # Uncomment this section to add missing data
-        # df1 = impute_direct_credit(df1)
+        df1 = impute_direct_credit(df1)
         
         # Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
         df1 = fix_money_receive_balance(df1)
@@ -318,7 +320,7 @@ if __name__ == '__main__':
         # Merge both trxs and export to csv
         (
             pd
-            .concat([df1, df2])
+            .concat([df2, df1])
             .sort_values('Date', kind='mergesort')
             .to_csv(CSV_LINK, index=False,  encoding='utf-8')
         )
