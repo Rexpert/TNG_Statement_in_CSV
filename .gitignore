@@ -1,6 +1,7 @@
 pdf/tng_ewallet_transactions*.pdf
 pdf/transactions*.pdf
 csv/tng_ewallet_transactions*.csv
+missing_data/missing_data.csv
 
 # Ignore folder for virtual environment.
 /*venv
