@@ -13,6 +13,7 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
   - [Reversing Entries](#reversing)
   - [Money Packets 2023 Balance](#mp-balance)
   - [Missing Direct Credit Entries](#dc-entries)
+  - [GO+ Daily Earning showing 2 decimal places](#2dp)
 
 ## How to download TNG Ewallet Statement
 
@@ -247,7 +248,7 @@ Here're the instruction to download the newer version of PDF Statement via TNG e
 
 <a id="run-python"></a>
 
-4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `pdf/` folder. By default, the program is designed to feed in the latest pdf with the fuzzy named: `*transactions*.pdf`
+4. Download your TNG statement (which is named `tng_ewallet_transactions.pdf`) and locating it into a `pdf/` folder. By default, the program is designed to feed in the latest pdf with the fuzzy name matching `*transactions*.pdf`
 
 5. Run the [main.py](main.py)
     ```
@@ -294,7 +295,7 @@ Some known bugs happen during the generation of the pdf transaction report by TN
        ```
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/f56ea6cd-f798-469a-81db-577d83f8e71b)
-
+<a id="2dp"></a>
 4. GO+ Daily Earning showing 2 decimal places
    - In the newer version of TNG Statement [downloaded via TNG ePortal](#download-the-pdf-statement-via-tng-eportal), the GO+ Daily Earning showing only 2 decimal places instead of 4 decimal places in the TNG Statement [downloaded via TNG eWallet APP](#download-the-pdf-statement-via-tng-ewallet-app)
    - This discrepancy may cause rounding error when summing up the Wallet Balance.
