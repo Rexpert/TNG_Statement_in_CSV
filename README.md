@@ -22,8 +22,8 @@ This code builds a CSV table that records all transactions within TNG e-Wallet f
 ### Download the PDF Statement via TNG eWallet App
 Here're the [official instruction](https://support.tngdigital.com.my/hc/en-my/articles/360035649754-How-can-I-view-or-download-my-transaction-history) provided by Touch'n Go in TNG eWallet app. 
 
-<kbd><img src="./images/transaction_1.jpeg" width=450/></kbd>
-<kbd><img src="./images/transaction_2.jpeg" width=450/></kbd>
+<kbd><img src="./assets/images/transaction_1.jpeg" width=450/></kbd>
+<kbd><img src="./assets/images/transaction_2.jpeg" width=450/></kbd>
 
 The instruction above is little bit outdated, a newer flow as of writing time is like:
 - go to your "Transactions" in TNG eWallet app
@@ -34,7 +34,7 @@ The instruction above is little bit outdated, a newer flow as of writing time is
 
 After wait for awhile you should receive an email from Touch'n Go as shown below:
 
-![email](./images/tng_email.png)
+![email](./assets/images/tng_email.png)
 
 Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf**, and put this file into `pdf/` folder of this project.
 
@@ -274,14 +274,14 @@ Some known bugs happen during the generation of the pdf transaction report by TN
    - Example:
      ![image](https://github.com/Rexpert/TNG_Statement_in_CSV/assets/46991185/aa06e93d-480e-4ed1-aa93-d4cbc036b461)
    - This bug was fixed on the pdf statement after CNY 2024:
-     ![image](./images/money_packet_fixed.png)
+     ![image](./assets/images/money_packet_fixed.png)
 <a id="dc-entries"></a>
 3. Missing Direct Credit entry (Found on [362cc8a](https://github.com/Rexpert/TNG_Statement_in_CSV/commit/362cc8a1362859e0be5d71780b8c2a10ddb62527))
    - Direct Credit entries are not recorded in the transaction history
    - Some of us might be involved in the Weekly Check-in on the A+ reward. The check-in for `9 Sept 2023`, `10 Sept 2023` and `12 Sept 2023` rewards free credits, but the transactions are not recorded in the pdf. 
    - However, they can be viewed in the TNG e-Wallet app's history：
      - In the `transaction history` page, filter the transaction by `Others` > `Direct Credit`  
-     <kbd><img src="images/dc_entries.gif" width=450></img></kbd>
+     <kbd><img src="./assets/images/dc_entries.gif" width=450></img></kbd>
    - You need to input those transactions manually if you were involved in those rewards, otherwise the `ValueError: Some Entry Not Recorded Properly` will be raised:
      - Heading to [`missing_data/missing_data.csv`](https://github.com/Rexpert/TNG_Statement_in_CSV/blob/main/missing_data/missing_data.csv)
      - Input the `Direct Credit` entries that obtained in the TNG eWallet App as the [example](https://github.com/Rexpert/TNG_Statement_in_CSV/blob/main/missing_data/example_missing_data.csv) shown:
