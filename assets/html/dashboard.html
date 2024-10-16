@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TNG eWallet Unofficial Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* 禁止整个页面滚动 */
+        }
+        .scrollable-vertical {
+            overflow-y: auto;
+            background-color: #f58025;
+            color: white;
+            height: 100%;
+        }
+        .scrollable-horizontal {
+            overflow-x: auto;
+            background-color: #236b34;
+            color: white;
+            white-space: nowrap;
+        }
+        .non-scrollable {
+            background-color: #1aa0d1;
+            color: white;
+        }
+        .non-scrollable-second {
+            background-color: #8d3dc6;
+            color: white;
+        }
+        .navbar-section {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .full-height {
+            height: calc(100vh - 56px); /* 计算导航栏以下的高度 */
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column">
+    <template id="temp-row">
+        <tr id="tr-">
+            <th id="tr-date-" scope="row"></th>
+            <td id="tr-type-"></td>
+            <td id="tr-desc-"></td>
+            <td id="tr-amnt-"></td>
+        </tr>
+    </template>
+    <!-- Navbar -->
+    <nav class="container navbar navbar-section navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">TNG eWallet Unofficial Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Navbar</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content, using flex-grow to fill the remaining space -->
+    <div class="container d-flex flex-grow-1 full-height">
+        <div class="row flex-grow-1 w-100">
+            <!-- Left Vertical Scrollable Section (Only this part scrolls vertically) -->
+            <div class="col-md-5 scrollable-vertical p-3">
+                Vertical Scrollable
+                <table class="table table-sort table-arrows" style="font-size: small;">
+                    <thead>
+                        <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Description</th>
+                            <th scope="col" class="order-by-desc">RM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Additional rows can go here -->
+                        <tr>
+                            <td>10/8/2023</td>
+                            <td>Direct Debit</td>
+                            <td>TECH SOLUTIONS SDN BHD (EC)</td>
+                            <td>250.75</td>
+                        </tr>
+                        <tr>
+                            <td>5/11/2023</td>
+                            <td>Transfer</td>
+                            <td>INNOVATION GLOBAL PTE LTD</td>
+                            <td>1050.00</td>
+                        </tr>
+                        <tr>
+                            <td>7/7/2023</td>
+                            <td>Direct Credit</td>
+                            <td>NEXUS TECHNOLOGIES (MY)</td>
+                            <td>675.20</td>
+                        </tr>
+                        <tr>
+                            <td>15/9/2023</td>
+                            <td>Direct Credit</td>
+                            <td>ADVANCED TECH SYSTEMS (SG)</td>
+                            <td>1.25</td>
+                        </tr>
+                        <tr>
+                            <td>22/10/2023</td>
+                            <td>Direct Debit</td>
+                            <td>OPTIMAL NETWORKS SOLUTIONS</td>
+                            <td>500.40</td>
+                        </tr>
+                        <tr>
+                            <td>2/12/2023</td>
+                            <td>Transfer</td>
+                            <td>GLOBAL TECH SUPPLIES (M)</td>
+                            <td>980.00</td>
+                        </tr>
+                        <tr>
+                            <td>18/9/2023</td>
+                            <td>Direct Credit</td>
+                            <td>TECH VENTURES LTD (EC)</td>
+                            <td>15.75</td>
+                        </tr>
+                        <tr>
+                            <td>12/11/2023</td>
+                            <td>Direct Debit</td>
+                            <td>ADVANCE COMPUTING PTE LTD</td>
+                            <td>2.50</td>
+                        </tr>
+                        <tr>
+                            <td>30/6/2023</td>
+                            <td>Direct Credit</td>
+                            <td>SYNERGY SYSTEMS (MY)</td>
+                            <td>320.00</td>
+                        </tr>
+                        <tr>
+                            <td>25/10/2023</td>
+                            <td>Transfer</td>
+                            <td>INTEGRATED SOLUTIONS SDN BHD</td>
+                            <td>150.30</td>
+                        </tr>
+                        <tr>
+                            <td>8/1/2023</td>
+                            <td>Transfer</td>
+                            <td>ALPHA INNOVATIONS SDN BHD</td>
+                            <td>1350.40</td>
+                        </tr>
+                        <tr>
+                            <td>14/2/2023</td>
+                            <td>Direct Credit</td>
+                            <td>FOCUS TECH PTE LTD</td>
+                            <td>725.10</td>
+                        </tr>
+                        <tr>
+                            <td>18/3/2023</td>
+                            <td>Direct Debit</td>
+                            <td>PROACTIVE SOLUTIONS (MY)</td>
+                            <td>200.25</td>
+                        </tr>
+                        <tr>
+                            <td>28/4/2023</td>
+                            <td>Transfer</td>
+                            <td>DYNAMIC NETWORKS LTD</td>
+                            <td>940.00</td>
+                        </tr>
+                        <tr>
+                            <td>12/5/2023</td>
+                            <td>Direct Credit</td>
+                            <td>TECH VISION SDN BHD (EC)</td>
+                            <td>300.50</td>
+                        </tr>
+                        <tr>
+                            <td>3/6/2023</td>
+                            <td>Direct Debit</td>
+                            <td>INFINITY SYSTEMS PTE LTD</td>
+                            <td>450.60</td>
+                        </tr>
+                        <tr>
+                            <td>21/7/2023</td>
+                            <td>Transfer</td>
+                            <td>OPTIC TECHNOLOGIES (M)</td>
+                            <td>820.75</td>
+                        </tr>
+                        <tr>
+                            <td>29/8/2023</td>
+                            <td>Direct Credit</td>
+                            <td>ADVANCED COMMUNICATION LTD (EC)</td>
+                            <td>50.00</td>
+                        </tr>
+                        <tr>
+                            <td>6/9/2023</td>
+                            <td>Direct Debit</td>
+                            <td>UNITY SOLUTIONS PTE LTD</td>
+                            <td>670.90</td>
+                        </tr>
+                        <tr>
+                            <td>24/10/2023</td>
+                            <td>Transfer</td>
+                            <td>NEXTGEN NETWORKS SDN BHD</td>
+                            <td>785.35</td>
+                        </tr>
+                        <tr>
+                            <td>2/11/2023</td>
+                            <td>Direct Credit</td>
+                            <td>PRIME TECH SOLUTIONS (MY)</td>
+                            <td>920.00</td>
+                        </tr>
+                        <tr>
+                            <td>14/12/2023</td>
+                            <td>Direct Debit</td>
+                            <td>SYNERGY SYSTEMS LTD (EC)</td>
+                            <td>180.15</td>
+                        </tr>
+                        <tr>
+                            <td>25/11/2023</td>
+                            <td>Transfer</td>
+                            <td>INTEGRATED TECH SERVICES (SG)</td>
+                            <td>410.85</td>
+                        </tr>
+                        <tr>
+                            <td>3/12/2023</td>
+                            <td>Direct Credit</td>
+                            <td>DATA LINK TECHNOLOGIES</td>
+                            <td>245.60</td>
+                        </tr>
+                        <tr>
+                            <td>9/10/2023</td>
+                            <td>Transfer</td>
+                            <td>SECURE TECH SDN BHD</td>
+                            <td>675.45</td>
+                        </tr>
+                        <tr>
+                            <td>5/5/2023</td>
+                            <td>Direct Debit</td>
+                            <td>CLOUD NETWORK SOLUTIONS (EC)</td>
+                            <td>50.75</td>
+                        </tr>
+                        <tr>
+                            <td>15/6/2023</td>
+                            <td>Direct Credit</td>
+                            <td>VISIONARY TECH PTE LTD</td>
+                            <td>1300.00</td>
+                        </tr>
+                        <tr>
+                            <td>20/7/2023</td>
+                            <td>Direct Debit</td>
+                            <td>PINNACLE TECHNOLOGIES SDN BHD</td>
+                            <td>980.90</td>
+                        </tr>
+                        <tr>
+                            <td>11/8/2023</td>
+                            <td>Transfer</td>
+                            <td>NEXT LEVEL SYSTEMS PTE LTD</td>
+                            <td>320.10</td>
+                        </tr>
+                        <tr>
+                            <td>18/9/2023</td>
+                            <td>Direct Credit</td>
+                            <td>GLOBAL INNOVATION SOLUTIONS</td>
+                            <td>605.30</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Right Sections (Non-scrollable) -->
+            <div class="col-md-7 d-flex flex-column">
+                <div class="row flex-grow-1">
+                    <!-- Horizontal Scrollable Section -->
+                    <div class="col scrollable-horizontal p-3">
+                        Horizontal Scrollable
+                    </div>
+                </div>
+                <div class="row h-50">
+                    <!-- Bottom Two Non-scrollable Sections -->
+                    <div class="col non-scrollable p-3">
+                        Non-scrollable
+                    </div>
+                    <div class="col non-scrollable-second p-3">
+                        Non-scrollable
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container d-flex flex-grow-1 full-height">
+        <div class="row flex-grow-1 w-100">
+            <!-- Left Vertical Scrollable Section -->
+            <div class="col-md-5 scrollable-vertical p-3">
+                
+                
+            </div>
+
+            <!-- Right Sections -->
+            <div class="col-md-7 d-flex flex-column">
+                <div class="row flex-grow-1">
+                    <!-- Horizontal Scrollable Section -->
+                    <div class="col scrollable-horizontal p-3">
+                        Horizontal Scrollable
+                    </div>
+                </div>
+                <div class="row h-50">
+                    <!-- Bottom Two Non-scrollable Sections -->
+                    <div class="col non-scrollable p-3">
+                        Non-scrollable
+                    </div>
+                    <div class="col non-scrollable-second p-3">
+                        Non-scrollable
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/table-sort-js/table-sort.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
