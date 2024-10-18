@@ -10,11 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"
         integrity="sha256-6EJwvQzVvfYP78JtAMKjkcsugfTSanqe4WGFpUdzo88=" crossorigin="anonymous"></script>
     <style>
-        .navbar-section {
-            background-color: #4CAF50;
-            color: white;
-        }
-
         .accordion-body {
             max-height: calc(100vh - 56px - 52px*3 - 20px);
             overflow-y: auto;
@@ -36,11 +31,12 @@
             <td id="tr-amnt-"></td>
         </tr>
     </template>
-    <!-- Navbar -->
-    <nav class="navbar navbar-section navbar-expand-lg fixed-top">
+
+    <nav class="navbar fixed-top bg-dark" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Unofficial TNG eWallet Dashboard</a>
-            <button class="d-none navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="d-none navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+                aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div id="navbar" class="collapse navbar-collapse">
@@ -53,8 +49,6 @@
         </div>
     </nav>
 
-    <!-- Main Content, using flex-grow to fill the remaining space -->
-    <!-- TODO: Make accordion collapse when open another -->
     <div class="d-flex flex-grow-1 mt-5">
         <div class="container-fluid row flex-fill">
             <div class="d-none col-md-3 ps-0 mt-2">
@@ -149,9 +143,10 @@
                                     aria-controls="waterfall-tab-pane" aria-selected="false">Income vs Expenses</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
-                                    data-bs-target="#contact-tab-pane" type="button" role="tab"
-                                    aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+                                <button class="nav-link" id="calendar-tab" data-bs-toggle="tab"
+                                    data-bs-target="#calendar-tab-pane" type="button" role="tab"
+                                    aria-controls="calendar-tab-pane" aria-selected="false">Transactions by
+                                    Week</button>
                             </li>
                         </ul>
                     </div>
@@ -355,8 +350,10 @@
                             aria-labelledby="waterfall-tab" tabindex="0">
                             <div id="chart-1" class="w-100 h-100"></div>
                         </div>
-                        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab"
-                            tabindex="0">...</div>
+                        <div class="tab-pane fade w-100 h-100" id="calendar-tab-pane" role="tabpanel"
+                            aria-labelledby="calendar-tab" tabindex="0">
+                            <div id="chart-2" class="w-100 h-100"></div>
+                        </div>
                         <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab"
                             tabindex="0">...</div>
                     </div>
@@ -366,6 +363,7 @@
     </div>
     <script>
         const chart1 = echarts.init(document.querySelector('#chart-1'));
+        const chart2 = echarts.init(document.querySelector('#chart-2'));
         let chart1_option = {
             tooltip: {
                 trigger: 'axis',
@@ -446,12 +444,60 @@
         };
         chart1.setOption(chart1_option)
 
+        function getVirtualData(year) {
+            const date = +echarts.time.parse(year + '-01-01');
+            const end = +echarts.time.parse(+year + 1 + '-01-01');
+            const dayTime = 3600 * 24 * 1000;
+            const data = [];
+            for (let time = date; time < end; time += dayTime) {
+                data.push([
+                    echarts.time.format(time, '{yyyy}-{MM}-{dd}', false),
+                    Math.floor(Math.random() * 10000)
+                ]);
+            }
+            return data;
+        }
+        let chart2_option = {
+            title: {
+                top: 30,
+                left: 'center',
+                text: 'Daily Step Count'
+            },
+            tooltip: {},
+            visualMap: {
+                min: 0,
+                max: 10000,
+                type: 'piecewise',
+                orient: 'horizontal',
+                left: 'center',
+                top: 65
+            },
+            calendar: {
+                top: 120,
+                left: 30,
+                right: 30,
+                cellSize: ['auto', 13],
+                range: '1582',
+                itemStyle: {
+                    borderWidth: 0.5
+                },
+                yearLabel: { show: false }
+            },
+            series: {
+                type: 'heatmap',
+                coordinateSystem: 'calendar',
+                data: getVirtualData('1582')
+            }
+        };
+        chart2.setOption(chart2_option)
+
         document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(
             tabEl => tabEl.addEventListener('shown.bs.tab', event => {
-                if (event.target.textContent === 'Income vs Expenses') {
+                const text = event.target.textContent.trim().replaceAll(/\s+/g, ' ')
+                if (text === 'Income vs Expenses') {
                     chart1.resize()
-                } else {
-                    // basic_chart.resize()
+                } else if (text === 'Transactions by Week') {
+                    chart2.resize()
                 }
             })
         )
