@@ -7,43 +7,27 @@
     <title>TNG eWallet Unofficial Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"
+        integrity="sha256-6EJwvQzVvfYP78JtAMKjkcsugfTSanqe4WGFpUdzo88=" crossorigin="anonymous"></script>
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            overflow: hidden; /* 禁止整个页面滚动 */
-        }
-        .scrollable-vertical {
-            overflow-y: auto;
-            background-color: #f58025;
-            color: white;
-            height: 100%;
-        }
-        .scrollable-horizontal {
-            overflow-x: auto;
-            background-color: #236b34;
-            color: white;
-            white-space: nowrap;
-        }
-        .non-scrollable {
-            background-color: #1aa0d1;
-            color: white;
-        }
-        .non-scrollable-second {
-            background-color: #8d3dc6;
-            color: white;
-        }
         .navbar-section {
             background-color: #4CAF50;
             color: white;
         }
-        .full-height {
-            height: calc(100vh - 56px); /* 计算导航栏以下的高度 */
+
+        .accordion-body {
+            max-height: calc(100vh - 56px - 52px*3 - 20px);
+            overflow-y: auto;
+        }
+
+        .card-body {
+            height: calc(100vh - 56px - 20px - 50px);
+            overflow-y: auto;
         }
     </style>
 </head>
 
-<body class="d-flex flex-column">
+<body class="d-flex flex-column container-fluid">
     <template id="temp-row">
         <tr id="tr-">
             <th id="tr-date-" scope="row"></th>
@@ -53,11 +37,14 @@
         </tr>
     </template>
     <!-- Navbar -->
-    <nav class="container navbar navbar-section navbar-expand-lg">
-        <div class="container">
-            <a class="navbar-brand" href="#">TNG eWallet Unofficial Dashboard</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav ms-auto">
+    <nav class="navbar navbar-section navbar-expand-lg fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Unofficial TNG eWallet Dashboard</a>
+            <button class="d-none navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="d-none navbar-nav ms-auto">
                     <li class="nav-item">
                         <a class="nav-link" href="#">Navbar</a>
                     </li>
@@ -67,256 +54,409 @@
     </nav>
 
     <!-- Main Content, using flex-grow to fill the remaining space -->
-    <div class="container d-flex flex-grow-1 full-height">
-        <div class="row flex-grow-1 w-100">
-            <!-- Left Vertical Scrollable Section (Only this part scrolls vertically) -->
-            <div class="col-md-5 scrollable-vertical p-3">
-                Vertical Scrollable
-                <table class="table table-sort table-arrows" style="font-size: small;">
-                    <thead>
-                        <tr>
-                            <th scope="col">Date</th>
-                            <th scope="col">Type</th>
-                            <th scope="col">Description</th>
-                            <th scope="col" class="order-by-desc">RM</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Additional rows can go here -->
-                        <tr>
-                            <td>10/8/2023</td>
-                            <td>Direct Debit</td>
-                            <td>TECH SOLUTIONS SDN BHD (EC)</td>
-                            <td>250.75</td>
-                        </tr>
-                        <tr>
-                            <td>5/11/2023</td>
-                            <td>Transfer</td>
-                            <td>INNOVATION GLOBAL PTE LTD</td>
-                            <td>1050.00</td>
-                        </tr>
-                        <tr>
-                            <td>7/7/2023</td>
-                            <td>Direct Credit</td>
-                            <td>NEXUS TECHNOLOGIES (MY)</td>
-                            <td>675.20</td>
-                        </tr>
-                        <tr>
-                            <td>15/9/2023</td>
-                            <td>Direct Credit</td>
-                            <td>ADVANCED TECH SYSTEMS (SG)</td>
-                            <td>1.25</td>
-                        </tr>
-                        <tr>
-                            <td>22/10/2023</td>
-                            <td>Direct Debit</td>
-                            <td>OPTIMAL NETWORKS SOLUTIONS</td>
-                            <td>500.40</td>
-                        </tr>
-                        <tr>
-                            <td>2/12/2023</td>
-                            <td>Transfer</td>
-                            <td>GLOBAL TECH SUPPLIES (M)</td>
-                            <td>980.00</td>
-                        </tr>
-                        <tr>
-                            <td>18/9/2023</td>
-                            <td>Direct Credit</td>
-                            <td>TECH VENTURES LTD (EC)</td>
-                            <td>15.75</td>
-                        </tr>
-                        <tr>
-                            <td>12/11/2023</td>
-                            <td>Direct Debit</td>
-                            <td>ADVANCE COMPUTING PTE LTD</td>
-                            <td>2.50</td>
-                        </tr>
-                        <tr>
-                            <td>30/6/2023</td>
-                            <td>Direct Credit</td>
-                            <td>SYNERGY SYSTEMS (MY)</td>
-                            <td>320.00</td>
-                        </tr>
-                        <tr>
-                            <td>25/10/2023</td>
-                            <td>Transfer</td>
-                            <td>INTEGRATED SOLUTIONS SDN BHD</td>
-                            <td>150.30</td>
-                        </tr>
-                        <tr>
-                            <td>8/1/2023</td>
-                            <td>Transfer</td>
-                            <td>ALPHA INNOVATIONS SDN BHD</td>
-                            <td>1350.40</td>
-                        </tr>
-                        <tr>
-                            <td>14/2/2023</td>
-                            <td>Direct Credit</td>
-                            <td>FOCUS TECH PTE LTD</td>
-                            <td>725.10</td>
-                        </tr>
-                        <tr>
-                            <td>18/3/2023</td>
-                            <td>Direct Debit</td>
-                            <td>PROACTIVE SOLUTIONS (MY)</td>
-                            <td>200.25</td>
-                        </tr>
-                        <tr>
-                            <td>28/4/2023</td>
-                            <td>Transfer</td>
-                            <td>DYNAMIC NETWORKS LTD</td>
-                            <td>940.00</td>
-                        </tr>
-                        <tr>
-                            <td>12/5/2023</td>
-                            <td>Direct Credit</td>
-                            <td>TECH VISION SDN BHD (EC)</td>
-                            <td>300.50</td>
-                        </tr>
-                        <tr>
-                            <td>3/6/2023</td>
-                            <td>Direct Debit</td>
-                            <td>INFINITY SYSTEMS PTE LTD</td>
-                            <td>450.60</td>
-                        </tr>
-                        <tr>
-                            <td>21/7/2023</td>
-                            <td>Transfer</td>
-                            <td>OPTIC TECHNOLOGIES (M)</td>
-                            <td>820.75</td>
-                        </tr>
-                        <tr>
-                            <td>29/8/2023</td>
-                            <td>Direct Credit</td>
-                            <td>ADVANCED COMMUNICATION LTD (EC)</td>
-                            <td>50.00</td>
-                        </tr>
-                        <tr>
-                            <td>6/9/2023</td>
-                            <td>Direct Debit</td>
-                            <td>UNITY SOLUTIONS PTE LTD</td>
-                            <td>670.90</td>
-                        </tr>
-                        <tr>
-                            <td>24/10/2023</td>
-                            <td>Transfer</td>
-                            <td>NEXTGEN NETWORKS SDN BHD</td>
-                            <td>785.35</td>
-                        </tr>
-                        <tr>
-                            <td>2/11/2023</td>
-                            <td>Direct Credit</td>
-                            <td>PRIME TECH SOLUTIONS (MY)</td>
-                            <td>920.00</td>
-                        </tr>
-                        <tr>
-                            <td>14/12/2023</td>
-                            <td>Direct Debit</td>
-                            <td>SYNERGY SYSTEMS LTD (EC)</td>
-                            <td>180.15</td>
-                        </tr>
-                        <tr>
-                            <td>25/11/2023</td>
-                            <td>Transfer</td>
-                            <td>INTEGRATED TECH SERVICES (SG)</td>
-                            <td>410.85</td>
-                        </tr>
-                        <tr>
-                            <td>3/12/2023</td>
-                            <td>Direct Credit</td>
-                            <td>DATA LINK TECHNOLOGIES</td>
-                            <td>245.60</td>
-                        </tr>
-                        <tr>
-                            <td>9/10/2023</td>
-                            <td>Transfer</td>
-                            <td>SECURE TECH SDN BHD</td>
-                            <td>675.45</td>
-                        </tr>
-                        <tr>
-                            <td>5/5/2023</td>
-                            <td>Direct Debit</td>
-                            <td>CLOUD NETWORK SOLUTIONS (EC)</td>
-                            <td>50.75</td>
-                        </tr>
-                        <tr>
-                            <td>15/6/2023</td>
-                            <td>Direct Credit</td>
-                            <td>VISIONARY TECH PTE LTD</td>
-                            <td>1300.00</td>
-                        </tr>
-                        <tr>
-                            <td>20/7/2023</td>
-                            <td>Direct Debit</td>
-                            <td>PINNACLE TECHNOLOGIES SDN BHD</td>
-                            <td>980.90</td>
-                        </tr>
-                        <tr>
-                            <td>11/8/2023</td>
-                            <td>Transfer</td>
-                            <td>NEXT LEVEL SYSTEMS PTE LTD</td>
-                            <td>320.10</td>
-                        </tr>
-                        <tr>
-                            <td>18/9/2023</td>
-                            <td>Direct Credit</td>
-                            <td>GLOBAL INNOVATION SOLUTIONS</td>
-                            <td>605.30</td>
-                        </tr>
-                        
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Right Sections (Non-scrollable) -->
-            <div class="col-md-7 d-flex flex-column">
-                <div class="row flex-grow-1">
-                    <!-- Horizontal Scrollable Section -->
-                    <div class="col scrollable-horizontal p-3">
-                        Horizontal Scrollable
+    <!-- TODO: Make accordion collapse when open another -->
+    <div class="d-flex flex-grow-1 mt-5">
+        <div class="container-fluid row flex-fill">
+            <div class="d-none col-md-3 ps-0 mt-2">
+                <div class="accordion my-2" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Accordion Item #1
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the first item's accordion body.</strong> It is shown by default, until
+                                the collapse plugin adds the appropriate classes that we use to style each element.
+                                These classes control the overall appearance, as well as the showing and hiding via CSS
+                                transitions. You can modify any of this with custom CSS or overriding our default
+                                variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                                <strong>This is the first item's accordion body.</strong> It is shown by default, until
+                                the collapse plugin adds the appropriate classes that we use to style each element.
+                                These classes control the overall appearance, as well as the showing and hiding via CSS
+                                transitions. You can modify any of this with custom CSS or overriding our default
+                                variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                                <strong>This is the first item's accordion body.</strong> It is shown by default, until
+                                the collapse plugin adds the appropriate classes that we use to style each element.
+                                These classes control the overall appearance, as well as the showing and hiding via CSS
+                                transitions. You can modify any of this with custom CSS or overriding our default
+                                variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                                <strong>This is the first item's accordion body.</strong> It is shown by default, until
+                                the collapse plugin adds the appropriate classes that we use to style each element.
+                                These classes control the overall appearance, as well as the showing and hiding via CSS
+                                transitions. You can modify any of this with custom CSS or overriding our default
+                                variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Accordion Item #2
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the second item's accordion body.</strong> It is hidden by default,
+                                until the collapse plugin adds the appropriate classes that we use to style each
+                                element. These classes control the overall appearance, as well as the showing and hiding
+                                via CSS transitions. You can modify any of this with custom CSS or overriding our
+                                default variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Accordion Item #3
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <strong>This is the third item's accordion body.</strong> It is hidden by default, until
+                                the collapse plugin adds the appropriate classes that we use to style each element.
+                                These classes control the overall appearance, as well as the showing and hiding via CSS
+                                transitions. You can modify any of this with custom CSS or overriding our default
+                                variables. It's also worth noting that just about any HTML can go within the
+                                <code>.accordion-body</code>, though the transition does limit overflow.
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row h-50">
-                    <!-- Bottom Two Non-scrollable Sections -->
-                    <div class="col non-scrollable p-3">
-                        Non-scrollable
+            </div>
+            <div class="col-md-9 px-0 d-flex mt-2">
+                <div class="card my-2 flex-fill">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="table-tab" data-bs-toggle="tab"
+                                    data-bs-target="#table-tab-pane" type="button" role="tab"
+                                    aria-controls="table-tab-pane" aria-selected="true">Transaction Table</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="waterfall-tab" data-bs-toggle="tab"
+                                    data-bs-target="#waterfall-tab-pane" type="button" role="tab"
+                                    aria-controls="waterfall-tab-pane" aria-selected="false">Income vs Expenses</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                    data-bs-target="#contact-tab-pane" type="button" role="tab"
+                                    aria-controls="contact-tab-pane" aria-selected="false">Contact</button>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="col non-scrollable-second p-3">
-                        Non-scrollable
+                    <div class="tab-content card-body" id="myTabContent">
+                        <div class="tab-pane fade show active " id="table-tab-pane" role="tabpanel"
+                            aria-labelledby="table-tab" tabindex="0">
+                            <table class="table table-sort table-arrows" style="font-size: small;">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Description</th>
+                                        <th scope="col" class="order-by-desc">RM</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>10/8/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>TECH SOLUTIONS SDN BHD (EC)</td>
+                                        <td>250.75</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5/11/2023</td>
+                                        <td>Transfer</td>
+                                        <td>INNOVATION GLOBAL PTE LTD</td>
+                                        <td>1050.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>7/7/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>NEXUS TECHNOLOGIES (MY)</td>
+                                        <td>675.20</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/9/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>ADVANCED TECH SYSTEMS (SG)</td>
+                                        <td>1.25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>22/10/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>OPTIMAL NETWORKS SOLUTIONS</td>
+                                        <td>500.40</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2/12/2023</td>
+                                        <td>Transfer</td>
+                                        <td>GLOBAL TECH SUPPLIES (M)</td>
+                                        <td>980.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18/9/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>TECH VENTURES LTD (EC)</td>
+                                        <td>15.75</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/11/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>ADVANCE COMPUTING PTE LTD</td>
+                                        <td>2.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>30/6/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>SYNERGY SYSTEMS (MY)</td>
+                                        <td>320.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>25/10/2023</td>
+                                        <td>Transfer</td>
+                                        <td>INTEGRATED SOLUTIONS SDN BHD</td>
+                                        <td>150.30</td>
+                                    </tr>
+                                    <tr>
+                                        <td>8/1/2023</td>
+                                        <td>Transfer</td>
+                                        <td>ALPHA INNOVATIONS SDN BHD</td>
+                                        <td>1350.40</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14/2/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>FOCUS TECH PTE LTD</td>
+                                        <td>725.10</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18/3/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>PROACTIVE SOLUTIONS (MY)</td>
+                                        <td>200.25</td>
+                                    </tr>
+                                    <tr>
+                                        <td>28/4/2023</td>
+                                        <td>Transfer</td>
+                                        <td>DYNAMIC NETWORKS LTD</td>
+                                        <td>940.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/5/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>TECH VISION SDN BHD (EC)</td>
+                                        <td>300.50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3/6/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>INFINITY SYSTEMS PTE LTD</td>
+                                        <td>450.60</td>
+                                    </tr>
+                                    <tr>
+                                        <td>21/7/2023</td>
+                                        <td>Transfer</td>
+                                        <td>OPTIC TECHNOLOGIES (M)</td>
+                                        <td>820.75</td>
+                                    </tr>
+                                    <tr>
+                                        <td>29/8/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>ADVANCED COMMUNICATION LTD (EC)</td>
+                                        <td>50.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>6/9/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>UNITY SOLUTIONS PTE LTD</td>
+                                        <td>670.90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>24/10/2023</td>
+                                        <td>Transfer</td>
+                                        <td>NEXTGEN NETWORKS SDN BHD</td>
+                                        <td>785.35</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2/11/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>PRIME TECH SOLUTIONS (MY)</td>
+                                        <td>920.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>14/12/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>SYNERGY SYSTEMS LTD (EC)</td>
+                                        <td>180.15</td>
+                                    </tr>
+                                    <tr>
+                                        <td>25/11/2023</td>
+                                        <td>Transfer</td>
+                                        <td>INTEGRATED TECH SERVICES (SG)</td>
+                                        <td>410.85</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3/12/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>DATA LINK TECHNOLOGIES</td>
+                                        <td>245.60</td>
+                                    </tr>
+                                    <tr>
+                                        <td>9/10/2023</td>
+                                        <td>Transfer</td>
+                                        <td>SECURE TECH SDN BHD</td>
+                                        <td>675.45</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5/5/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>CLOUD NETWORK SOLUTIONS (EC)</td>
+                                        <td>50.75</td>
+                                    </tr>
+                                    <tr>
+                                        <td>15/6/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>VISIONARY TECH PTE LTD</td>
+                                        <td>1300.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>20/7/2023</td>
+                                        <td>Direct Debit</td>
+                                        <td>PINNACLE TECHNOLOGIES SDN BHD</td>
+                                        <td>980.90</td>
+                                    </tr>
+                                    <tr>
+                                        <td>11/8/2023</td>
+                                        <td>Transfer</td>
+                                        <td>NEXT LEVEL SYSTEMS PTE LTD</td>
+                                        <td>320.10</td>
+                                    </tr>
+                                    <tr>
+                                        <td>18/9/2023</td>
+                                        <td>Direct Credit</td>
+                                        <td>GLOBAL INNOVATION SOLUTIONS</td>
+                                        <td>605.30</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade w-100 h-100" id="waterfall-tab-pane" role="tabpanel"
+                            aria-labelledby="waterfall-tab" tabindex="0">
+                            <div id="chart-1" class="w-100 h-100"></div>
+                        </div>
+                        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab"
+                            tabindex="0">...</div>
+                        <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab"
+                            tabindex="0">...</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container d-flex flex-grow-1 full-height">
-        <div class="row flex-grow-1 w-100">
-            <!-- Left Vertical Scrollable Section -->
-            <div class="col-md-5 scrollable-vertical p-3">
-                
-                
-            </div>
+    <script>
+        const chart1 = echarts.init(document.querySelector('#chart-1'));
+        let chart1_option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                formatter: function (params) {
+                    let tar;
+                    if (params[1] && params[1].value !== '-') {
+                        tar = params[1];
+                    } else {
+                        tar = params[2];
+                    }
+                    return tar && tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+                }
+            },
+            legend: {
+                data: ['Expenses', 'Income']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                data: (function () {
+                    let list = [];
+                    for (let i = 1; i <= 11; i++) {
+                        list.push('Nov ' + i);
+                    }
+                    return list;
+                })()
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [
+                {
+                    name: 'Placeholder',
+                    type: 'bar',
+                    stack: 'Total',
+                    silent: true,
+                    itemStyle: {
+                        borderColor: 'transparent',
+                        color: 'transparent'
+                    },
+                    emphasis: {
+                        itemStyle: {
+                            borderColor: 'transparent',
+                            color: 'transparent'
+                        }
+                    },
+                    data: [0, 900, 1245, 1530, 1376, 1376, 1511, 1689, 1856, 1495, 1292]
+                },
+                {
+                    name: 'Income',
+                    type: 'bar',
+                    stack: 'Total',
+                    label: {
+                        show: true,
+                        position: 'top'
+                    },
+                    data: [900, 345, 393, '-', '-', 135, 178, 286, '-', '-', '-']
+                },
+                {
+                    name: 'Expenses',
+                    type: 'bar',
+                    stack: 'Total',
+                    label: {
+                        show: true,
+                        position: 'bottom'
+                    },
+                    data: ['-', '-', '-', 108, 154, '-', '-', '-', 119, 361, 203]
+                }
+            ]
+        };
+        chart1.setOption(chart1_option)
 
-            <!-- Right Sections -->
-            <div class="col-md-7 d-flex flex-column">
-                <div class="row flex-grow-1">
-                    <!-- Horizontal Scrollable Section -->
-                    <div class="col scrollable-horizontal p-3">
-                        Horizontal Scrollable
-                    </div>
-                </div>
-                <div class="row h-50">
-                    <!-- Bottom Two Non-scrollable Sections -->
-                    <div class="col non-scrollable p-3">
-                        Non-scrollable
-                    </div>
-                    <div class="col non-scrollable-second p-3">
-                        Non-scrollable
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+        document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(
+            tabEl => tabEl.addEventListener('shown.bs.tab', event => {
+                if (event.target.textContent === 'Income vs Expenses') {
+                    chart1.resize()
+                } else {
+                    // basic_chart.resize()
+                }
+            })
+        )
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/table-sort-js/table-sort.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
