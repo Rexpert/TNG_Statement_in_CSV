@@ -32,7 +32,7 @@
         </tr>
     </template>
 
-    <nav class="navbar fixed-top bg-dark" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-md fixed-top bg-dark" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Unofficial TNG eWallet Dashboard</a>
             <button class="d-none navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
@@ -147,6 +147,11 @@
                                     data-bs-target="#calendar-tab-pane" type="button" role="tab"
                                     aria-controls="calendar-tab-pane" aria-selected="false">Transactions by
                                     Week</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="bar-tab" data-bs-toggle="tab"
+                                    data-bs-target="#bar-tab-pane" type="button" role="tab" aria-controls="bar-tab-pane"
+                                    aria-selected="false">Top N Transactions</button>
                             </li>
                         </ul>
                     </div>
@@ -354,8 +359,14 @@
                             aria-labelledby="calendar-tab" tabindex="0">
                             <div id="chart-2" class="w-100 h-100"></div>
                         </div>
-                        <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab"
-                            tabindex="0">...</div>
+                        <div class="tab-pane fade w-100 h-100 position-relative" id="bar-tab-pane" role="tabpanel"
+                            aria-labelledby="bar-tab" tabindex="0">
+                            <div class="position-absolute border p-2 top-0 end-0 z-3 bg-white">
+                                <label for="rngTopN" class="form-label">Example range: <span id="lblTopN"></span></label>
+                                <input type="range" class="form-range" min="0" max="5" id="rngTopN">
+                            </div>
+                            <div id="chart-3" class="w-100 h-100"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -364,6 +375,7 @@
     <script>
         const chart1 = echarts.init(document.querySelector('#chart-1'));
         const chart2 = echarts.init(document.querySelector('#chart-2'));
+        const chart3 = echarts.init(document.querySelector('#chart-3'));
         let chart1_option = {
             tooltip: {
                 trigger: 'axis',
@@ -491,6 +503,83 @@
         };
         chart2.setOption(chart2_option)
 
+        const labelRight = {
+            position: 'right'
+        };
+        let chart3_option = {
+            title: {
+                text: 'Bar Chart with Negative Value'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                }
+            },
+            grid: {
+                top: 80,
+                bottom: 30
+            },
+            xAxis: {
+                type: 'value',
+                position: 'top',
+                splitLine: {
+                    lineStyle: {
+                        type: 'dashed'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'category',
+                axisLine: { show: false },
+                axisLabel: { show: false },
+                axisTick: { show: false },
+                splitLine: { show: false },
+                data: [
+                    'ten',
+                    'nine',
+                    'eight',
+                    'seven',
+                    'six',
+                    'five',
+                    'four',
+                    'three',
+                    'two',
+                    'one'
+                ]
+            },
+            series: [
+                {
+                    name: 'Cost',
+                    type: 'bar',
+                    stack: 'Total',
+                    label: {
+                        show: true,
+                        formatter: '{b}'
+                    },
+                    data: [
+                        { value: -0.07, label: labelRight },
+                        { value: -0.09, label: labelRight },
+                        0.2,
+                        0.44,
+                        { value: -0.23, label: labelRight },
+                        0.08,
+                        { value: -0.17, label: labelRight },
+                        0.47,
+                        { value: -0.36, label: labelRight },
+                        0.18
+                    ]
+                }
+            ]
+        };
+        chart3.setOption(chart3_option)
+        
+        document.querySelector('#lblTopN').innerHTML = document.querySelector('#rngTopN').value
+        document.querySelector('#rngTopN').addEventListener('input', event => {
+            document.querySelector('#lblTopN').innerHTML = event.target.value
+        })
+
+
         document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(
             tabEl => tabEl.addEventListener('shown.bs.tab', event => {
                 const text = event.target.textContent.trim().replaceAll(/\s+/g, ' ')
@@ -498,6 +587,8 @@
                     chart1.resize()
                 } else if (text === 'Transactions by Week') {
                     chart2.resize()
+                } else if (text === 'Top N Transactions') {
+                    chart3.resize()
                 }
             })
         )
