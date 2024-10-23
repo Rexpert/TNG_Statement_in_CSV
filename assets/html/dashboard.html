@@ -19,6 +19,10 @@
             height: calc(100vh - 56px - 20px - 50px);
             overflow-y: auto;
         }
+        
+        td:last-child {
+            text-align: right;
+        }
     </style>
 </head>
 
@@ -28,7 +32,7 @@
             <th id="tr-date-" scope="row"></th>
             <td id="tr-type-"></td>
             <td id="tr-desc-"></td>
-            <td id="tr-amnt-"></td>
+            <td><span class="float-start"></span><span id="tr-amnt-"></span></td>
         </tr>
     </template>
 
@@ -156,199 +160,18 @@
                         </ul>
                     </div>
                     <div class="tab-content card-body" id="myTabContent">
-                        <div class="tab-pane fade show active " id="table-tab-pane" role="tabpanel"
+                        <div class="tab-pane fade show active table-responsive" id="table-tab-pane" role="tabpanel"
                             aria-labelledby="table-tab" tabindex="0">
                             <table class="table table-sort table-arrows">
-                                <thead>
+                                <thead class="table-dark">
                                     <tr>
                                         <th scope="col">Date</th>
-                                        <th scope="col">Type</th>
+                                        <th scope="col">Transaction Type</th>
                                         <th scope="col">Description</th>
                                         <th scope="col" class="order-by-desc">RM</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>10/8/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>TECH SOLUTIONS SDN BHD (EC)</td>
-                                        <td>250.75</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5/11/2023</td>
-                                        <td>Transfer</td>
-                                        <td>INNOVATION GLOBAL PTE LTD</td>
-                                        <td>1050.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>7/7/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>NEXUS TECHNOLOGIES (MY)</td>
-                                        <td>675.20</td>
-                                    </tr>
-                                    <tr>
-                                        <td>15/9/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>ADVANCED TECH SYSTEMS (SG)</td>
-                                        <td>1.25</td>
-                                    </tr>
-                                    <tr>
-                                        <td>22/10/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>OPTIMAL NETWORKS SOLUTIONS</td>
-                                        <td>500.40</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2/12/2023</td>
-                                        <td>Transfer</td>
-                                        <td>GLOBAL TECH SUPPLIES (M)</td>
-                                        <td>980.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>18/9/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>TECH VENTURES LTD (EC)</td>
-                                        <td>15.75</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12/11/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>ADVANCE COMPUTING PTE LTD</td>
-                                        <td>2.50</td>
-                                    </tr>
-                                    <tr>
-                                        <td>30/6/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>SYNERGY SYSTEMS (MY)</td>
-                                        <td>320.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>25/10/2023</td>
-                                        <td>Transfer</td>
-                                        <td>INTEGRATED SOLUTIONS SDN BHD</td>
-                                        <td>150.30</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8/1/2023</td>
-                                        <td>Transfer</td>
-                                        <td>ALPHA INNOVATIONS SDN BHD</td>
-                                        <td>1350.40</td>
-                                    </tr>
-                                    <tr>
-                                        <td>14/2/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>FOCUS TECH PTE LTD</td>
-                                        <td>725.10</td>
-                                    </tr>
-                                    <tr>
-                                        <td>18/3/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>PROACTIVE SOLUTIONS (MY)</td>
-                                        <td>200.25</td>
-                                    </tr>
-                                    <tr>
-                                        <td>28/4/2023</td>
-                                        <td>Transfer</td>
-                                        <td>DYNAMIC NETWORKS LTD</td>
-                                        <td>940.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>12/5/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>TECH VISION SDN BHD (EC)</td>
-                                        <td>300.50</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3/6/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>INFINITY SYSTEMS PTE LTD</td>
-                                        <td>450.60</td>
-                                    </tr>
-                                    <tr>
-                                        <td>21/7/2023</td>
-                                        <td>Transfer</td>
-                                        <td>OPTIC TECHNOLOGIES (M)</td>
-                                        <td>820.75</td>
-                                    </tr>
-                                    <tr>
-                                        <td>29/8/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>ADVANCED COMMUNICATION LTD (EC)</td>
-                                        <td>50.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>6/9/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>UNITY SOLUTIONS PTE LTD</td>
-                                        <td>670.90</td>
-                                    </tr>
-                                    <tr>
-                                        <td>24/10/2023</td>
-                                        <td>Transfer</td>
-                                        <td>NEXTGEN NETWORKS SDN BHD</td>
-                                        <td>785.35</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2/11/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>PRIME TECH SOLUTIONS (MY)</td>
-                                        <td>920.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>14/12/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>SYNERGY SYSTEMS LTD (EC)</td>
-                                        <td>180.15</td>
-                                    </tr>
-                                    <tr>
-                                        <td>25/11/2023</td>
-                                        <td>Transfer</td>
-                                        <td>INTEGRATED TECH SERVICES (SG)</td>
-                                        <td>410.85</td>
-                                    </tr>
-                                    <tr>
-                                        <td>3/12/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>DATA LINK TECHNOLOGIES</td>
-                                        <td>245.60</td>
-                                    </tr>
-                                    <tr>
-                                        <td>9/10/2023</td>
-                                        <td>Transfer</td>
-                                        <td>SECURE TECH SDN BHD</td>
-                                        <td>675.45</td>
-                                    </tr>
-                                    <tr>
-                                        <td>5/5/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>CLOUD NETWORK SOLUTIONS (EC)</td>
-                                        <td>50.75</td>
-                                    </tr>
-                                    <tr>
-                                        <td>15/6/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>VISIONARY TECH PTE LTD</td>
-                                        <td>1300.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>20/7/2023</td>
-                                        <td>Direct Debit</td>
-                                        <td>PINNACLE TECHNOLOGIES SDN BHD</td>
-                                        <td>980.90</td>
-                                    </tr>
-                                    <tr>
-                                        <td>11/8/2023</td>
-                                        <td>Transfer</td>
-                                        <td>NEXT LEVEL SYSTEMS PTE LTD</td>
-                                        <td>320.10</td>
-                                    </tr>
-                                    <tr>
-                                        <td>18/9/2023</td>
-                                        <td>Direct Credit</td>
-                                        <td>GLOBAL INNOVATION SOLUTIONS</td>
-                                        <td>605.30</td>
-                                    </tr>
-                                </tbody>
+                                <tbody></tbody>
                             </table>
                         </div>
                         <div class="tab-pane fade w-100 h-100" id="waterfall-tab-pane" role="tabpanel"

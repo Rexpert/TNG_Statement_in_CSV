@@ -247,7 +247,7 @@ function load_data() {
             })
             .then(res => res.text())
             .then(data => {
-                cache = Papa.parse(data, { skipEmptyLines: true }).data.map(row => Object.values(row));
+                cache = Papa.parse(data, { skipEmptyLines: true, header: true}).data
                 return cache;
             })
             .catch(error => console.error(error))
@@ -256,6 +256,30 @@ function load_data() {
     }
 }
 
+// Populate Table
+function populateTable(data) {
+    data.forEach((d, index) => {
+        const tr = document.querySelector('#temp-row').cloneNode(true).content.firstElementChild
+        tr.querySelector('#tr-date-').textContent = d['Date']
+        tr.querySelector('#tr-type-').textContent = d['Transaction Type']
+        tr.querySelector('#tr-desc-').textContent = d['Description']
+        tr.querySelector('#tr-amnt-').textContent = Math.abs(Number(d['Amount (RM)'])).toFixed(2)
+        
+        if (d['Amount (RM)'] < 0) {
+            tr.classList.add('table-danger')
+            tr.querySelector('.float-start').textContent = '-'
+        } else {
+            tr.classList.add('table-success')
+        }
+        tr.id += index
+        tr.querySelector('#tr-date-').id += index
+        tr.querySelector('#tr-type-').id += index
+        tr.querySelector('#tr-desc-').id += index
+        tr.querySelector('#tr-amnt-').id += index
+        document.querySelector('tbody').appendChild(tr)
+    })
+}
+
 load_data()
-    .then(data => console.log(data))
+    .then(populateTable)
 
