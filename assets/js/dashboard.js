@@ -217,3 +217,45 @@ document.querySelectorAll('button[data-bs-toggle="tab"]').forEach(
         }
     })
 )
+
+// Temporary using fetch api for Development, to be commented after online
+// TODO: Use selenium inject CSV data into JS: driver.execute_script('func(arguments[0])', array)
+let cache;
+let fetch_promise;
+function load_data() {
+    if (cache) {
+        // console.log('cache')
+        return Promise.resolve(cache);
+    } else if (fetch_promise) {
+        // console.log('waiting')
+        return fetch_promise
+    } else {
+        // console.log('not cache')
+        fetch_promise = fetch('../../csv')
+            .then(res => res.text())
+            .then(text => {
+                const el = document.createElement('html')
+                el.innerHTML = text
+                const a = el.querySelectorAll('#files a[href$=".csv"]')
+                const datesEl = el.querySelectorAll('#files a[href$=".csv"] .date')
+                const dates = (
+                    [...datesEl]
+                        .map((date, index) => ({ date: new Date(date.innerHTML), anchor: a[index] }))
+                        .sort((a, b) => b.date.getTime() - a.date.getTime())
+                )
+                return fetch(dates[0].anchor.href)
+            })
+            .then(res => res.text())
+            .then(data => {
+                cache = Papa.parse(data, { skipEmptyLines: true }).data.map(row => Object.values(row));
+                return cache;
+            })
+            .catch(error => console.error(error))
+            .finally(() => fetch_promise = null)
+        return fetch_promise
+    }
+}
+
+load_data()
+    .then(data => console.log(data))
+
