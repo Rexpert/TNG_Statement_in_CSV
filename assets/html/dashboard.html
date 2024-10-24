@@ -23,6 +23,34 @@
         td:last-child {
             text-align: right;
         }
+        
+        .marker {
+            display: inline-block;
+            margin-right: 4px;
+            border-radius: 10px;
+            width: 10px;
+            height: 10px;
+        }
+        
+        .marker-green {
+            background-color: #47b262;
+        }
+        
+        .marker-red {
+            background-color: #eb5454;
+        }
+        
+        hr {
+            border-top: 3px solid;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tooltip-value {
+            float: right;
+            margin-left: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -137,12 +165,12 @@
                     <div class="card-header">
                         <ul class="nav nav-tabs card-header-tabs">
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="table-tab" data-bs-toggle="tab"
+                                <button class="nav-link" id="table-tab" data-bs-toggle="tab"
                                     data-bs-target="#table-tab-pane" type="button" role="tab"
                                     aria-controls="table-tab-pane" aria-selected="true">Transaction Table</button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="waterfall-tab" data-bs-toggle="tab"
+                                <button class="nav-link active" id="waterfall-tab" data-bs-toggle="tab"
                                     data-bs-target="#waterfall-tab-pane" type="button" role="tab"
                                     aria-controls="waterfall-tab-pane" aria-selected="false">Income vs Expenses</button>
                             </li>
@@ -160,7 +188,7 @@
                         </ul>
                     </div>
                     <div class="tab-content card-body" id="myTabContent">
-                        <div class="tab-pane fade show active table-responsive" id="table-tab-pane" role="tabpanel"
+                        <div class="tab-pane fade table-responsive" id="table-tab-pane" role="tabpanel"
                             aria-labelledby="table-tab" tabindex="0">
                             <table class="table table-sort table-arrows">
                                 <thead class="table-dark">
@@ -174,7 +202,7 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                        <div class="tab-pane fade w-100 h-100" id="waterfall-tab-pane" role="tabpanel"
+                        <div class="tab-pane fade show active w-100 h-100" id="waterfall-tab-pane" role="tabpanel"
                             aria-labelledby="waterfall-tab" tabindex="0">
                             <div id="chart-1" class="w-100 h-100"></div>
                         </div>

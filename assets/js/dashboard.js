@@ -7,14 +7,24 @@ let chart1_option = {
         axisPointer: {
             type: 'shadow'
         },
-        formatter: function (params) {
-            let tar;
-            if (params[1] && params[1].value !== '-') {
-                tar = params[1];
-            } else {
-                tar = params[2];
+        formatter: params => {
+            const marker = params[0]['marker']
+            const value = params[0]['value'][2] - params[0]['value'][1]
+            const type = value >= 0 ? 'Income' : 'Expenses'
+            function setValue(value) {
+                return `<span class="tooltip-value">${value}</span>`
             }
-            return tar && tar.name + '<br/>' + tar.seriesName + ' : ' + tar.value;
+            let details = ''
+            const green = `<span class="marker marker-green"></span>`
+            const red = `<span class="marker marker-red"></span>`
+            params[0]['data']['details'].forEach(detail => {
+                details += detail[1] >= 0 ? green : red
+                details += " "
+                details += detail[0]
+                details += setValue(detail[1].toFixed(2))
+                details += `<br>`
+            })
+            return `${marker} ${type} ${setValue(value.toFixed(2))}<hr>${details}`
         }
     },
     legend: {
@@ -28,57 +38,42 @@ let chart1_option = {
     },
     xAxis: {
         type: 'category',
-        data: (function () {
-            let list = [];
-            for (let i = 1; i <= 11; i++) {
-                list.push('Nov ' + i);
-            }
-            return list;
-        })()
+        data: [],
+        axisLine: {
+            onZero: false
+        },
+        splitLine: {
+            show: false
+        }
     },
     yAxis: {
-        type: 'value'
+        type: 'value',
+        // show: false
     },
     series: [
         {
-            name: 'Placeholder',
-            type: 'bar',
-            stack: 'Total',
-            silent: true,
-            itemStyle: {
-                borderColor: 'transparent',
-                color: 'transparent'
-            },
-            emphasis: {
-                itemStyle: {
-                    borderColor: 'transparent',
-                    color: 'transparent'
-                }
-            },
-            data: [0, 900, 1245, 1530, 1376, 1376, 1511, 1689, 1856, 1495, 1292]
-        },
-        {
             name: 'Income',
-            type: 'bar',
-            stack: 'Total',
-            label: {
-                show: true,
-                position: 'top'
-            },
-            data: [900, 345, 393, '-', '-', 135, 178, 286, '-', '-', '-']
+            type: 'candlestick',
+            data: [],
+            itemStyle: {
+                color: '#47b262',
+                borderColor: '#47b262'
+            }
         },
         {
             name: 'Expenses',
-            type: 'bar',
-            stack: 'Total',
-            label: {
-                show: true,
-                position: 'bottom'
-            },
-            data: ['-', '-', '-', 108, 154, '-', '-', '-', 119, 361, 203]
+            type: 'candlestick',
+            data: [],
+            itemStyle: {
+                color: '#eb5454',
+                borderColor: '#eb5454',
+                color0: '#eb5454',
+                borderColor0: '#eb5454'
+            }
         }
     ]
 };
+
 chart1.setOption(chart1_option)
 
 function getVirtualData(year) {
@@ -247,7 +242,7 @@ function load_data() {
             })
             .then(res => res.text())
             .then(data => {
-                cache = Papa.parse(data, { skipEmptyLines: true, header: true}).data
+                cache = Papa.parse(data, { skipEmptyLines: true, header: true }).data
                 return cache;
             })
             .catch(error => console.error(error))
@@ -264,7 +259,7 @@ function populateTable(data) {
         tr.querySelector('#tr-type-').textContent = d['Transaction Type']
         tr.querySelector('#tr-desc-').textContent = d['Description']
         tr.querySelector('#tr-amnt-').textContent = Math.abs(Number(d['Amount (RM)'])).toFixed(2)
-        
+
         if (d['Amount (RM)'] < 0) {
             tr.classList.add('table-danger')
             tr.querySelector('.float-start').textContent = '-'
@@ -278,8 +273,48 @@ function populateTable(data) {
         tr.querySelector('#tr-amnt-').id += index
         document.querySelector('tbody').appendChild(tr)
     })
+    return data
+}
+
+function plotChart1(data) {
+    const positive = []
+    const negative = []
+    const cumsum = [0]
+    const dates = []
+    const group = Object.groupBy(data, d => d['Date'])
+    Object.entries(group).forEach((v, index) => {
+        let current = 0
+        const details = []
+        v[1].forEach(d => {
+            const amount = Number(d['Amount (RM)'])
+            current += amount
+            details.push([d['Description'], amount])
+        })
+        const previous = cumsum[index]
+        const sum = current + previous
+        cumsum.push(sum)
+        const arr = [previous, sum, previous, sum]
+        const d = {
+            value: arr,
+            details: details
+        }
+        if (current >= 0) {
+            positive.push(d)
+            negative.push('-')
+        } else {
+            positive.push('-')
+            negative.push(d)
+        }
+        dates.push(new Date(v[0]).toISOString().split('T')[0])
+    })
+    chart1_option['xAxis']['data'] = dates
+    chart1_option['series'][0]['data'] = positive
+    chart1_option['series'][1]['data'] = negative
+    chart1.setOption(chart1_option)
+    return data
 }
 
 load_data()
     .then(populateTable)
+    .then(plotChart1)
 
