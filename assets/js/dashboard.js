@@ -3,6 +3,7 @@ const chart2 = echarts.init(document.querySelector('#chart-2'));
 const chart3 = echarts.init(document.querySelector('#chart-3'));
 let chart1_option = {
     tooltip: {
+        confine: true,
         trigger: 'axis',
         axisPointer: {
             type: 'shadow'
@@ -76,50 +77,50 @@ let chart1_option = {
 
 chart1.setOption(chart1_option)
 
-function getVirtualData(year) {
-    const date = +echarts.time.parse(year + '-01-01');
-    const end = +echarts.time.parse(+year + 1 + '-01-01');
-    const dayTime = 3600 * 24 * 1000;
-    const data = [];
-    for (let time = date; time < end; time += dayTime) {
-        data.push([
-            echarts.time.format(time, '{yyyy}-{MM}-{dd}', false),
-            Math.floor(Math.random() * 10000)
-        ]);
-    }
-    return data;
-}
 let chart2_option = {
     title: {
         top: 30,
         left: 'center',
-        text: 'Daily Step Count'
+        text: 'Weekly Transactions'
     },
-    tooltip: {},
+    tooltip: {
+        confine: true,
+        formatter: params => {
+            const date = params['data']['value'][0]
+            const total = params['data']['value'][1]
+            const marker = params['marker']
+            const green = `<span class="marker marker-green"></span>`
+            const red = `<span class="marker marker-red"></span>`
+            function setValue(value) {
+                return `<span class="tooltip-value">${value}</span>`
+            }
+            let details = ''
+            params['data']['details'].forEach(detail => {
+                details += detail[1] >= 0 ? green : red
+                details += " "
+                details += detail[0]
+                details += setValue(detail[1].toFixed(2))
+                details += `<br>`
+            })
+            return `${marker} ${date} ${setValue(total.toFixed(2))}<hr>${details}`
+        }
+    },
     visualMap: {
-        min: 0,
-        max: 10000,
-        type: 'piecewise',
+        min: null,
+        max: null,
+        range: null,
+        precision: 2,
+        type: 'continuous',
+        calculable: true,
         orient: 'horizontal',
         left: 'center',
-        top: 65
+        botton: 65,
+        inRange: {
+            // color: null
+        }
     },
-    calendar: {
-        top: 120,
-        left: 30,
-        right: 30,
-        cellSize: ['auto', 13],
-        range: '1582',
-        itemStyle: {
-            borderWidth: 0.5
-        },
-        yearLabel: { show: false }
-    },
-    series: {
-        type: 'heatmap',
-        coordinateSystem: 'calendar',
-        data: getVirtualData('1582')
-    }
+    calendar: [],
+    series: []
 };
 chart2.setOption(chart2_option)
 
@@ -314,7 +315,99 @@ function plotChart1(data) {
     return data
 }
 
+function plotChart2(data) {
+    const dataByYear = Object.groupBy(data, d => d['Date'].slice(0, 4))
+    const series = []
+    const calendar = []
+    let min = 0;
+    let max = 0;
+    Object.entries(dataByYear).forEach(([year, dataY], index) => {
+        const dataByDate = Object.groupBy(dataY, d => d['Date'])
+        const amountD = []
+        Object.entries(dataByDate).forEach(([date, dataD]) => {
+            let total = 0
+            const details = []
+            dataD.forEach(d => {
+                total += Number(d['Amount (RM)'])
+                details.push([d['Description'], Number(d['Amount (RM)'])])
+            })
+            amountD.push({
+                value: [date, total],
+                details: details
+            })
+        })
+        series.push({
+            type: 'heatmap',
+            coordinateSystem: 'calendar',
+            data: amountD
+        })
+        calendar.push({
+            top: (index+1)*85+35,
+            left: 30,
+            right: 30,
+            cellSize: ['auto', 13],
+            range: year,
+            // range: ['2024-08-01', '2024-09-30'],
+            itemStyle: {
+                color: '#f0f0f0',
+                borderWidth: 0.5
+            },
+            yearLabel: {
+                position: 'top'
+            }
+        })
+        min = Math.min(...amountD.map(amount => amount['value'][1]))
+        max = Math.max(...amountD.map(amount => amount['value'][1]))
+    })
+    
+    function getVisualMapColor(min, max) {
+        const minColor = [255, 0, 0]; // Red in RGB
+        const zeroColor = [255, 255, 255]; // White in RGB
+        const maxColor = [71, 178, 98]; // Green in RGB
+        
+        function interpolateColor(color1, color2, factor) {
+            return color1.map((val, index) => Math.round(val + factor * (color2[index] - val)));
+        }
+        
+        function setRGB(rgb) {
+            return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`
+        }
+        let vmcolor = []
+        if (max < 0) {
+            max = 0
+            vmcolor = [setRGB(minColor), setRGB(zeroColor)]
+        } else if (min > 0) {
+            min = 0
+            vmcolor = [setRGB(zeroColor), setRGB(maxColor)]
+        } else {
+            const zeroPercentile = Math.abs(min)/(max-min)
+            function getColor(percentile3c) {
+                if (percentile3c < zeroPercentile) {
+                    return interpolateColor(minColor, zeroColor, percentile3c/zeroPercentile)
+                } else {
+                    return interpolateColor(zeroColor, maxColor, (percentile3c-zeroPercentile)/(1-zeroPercentile))
+                }
+            }
+            vmcolor = Array.from({ length: 101 }, (_, i) => i * 0.01).map(getColor).map(setRGB)
+        }
+        return {
+            vmmin: min,
+            vmmax: max,
+            vmcolor: vmcolor
+        }
+    }
+    const {vmmin, vmmax, vmcolor} = getVisualMapColor(min, max)
+    chart2_option['visualMap']['min'] = vmmin
+    chart2_option['visualMap']['max'] = vmmax
+    chart2_option['visualMap']['range'] = [min, max]
+    chart2_option['visualMap']['inRange']['color'] = vmcolor
+    chart2_option['calendar'] = calendar
+    chart2_option['series'] = series
+    chart2.setOption(chart2_option)
+}
+
 load_data()
     .then(populateTable)
     .then(plotChart1)
+    .then(plotChart2)
 
