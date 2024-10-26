@@ -3,7 +3,7 @@ import numpy as np
 import camelot
 import time
 import os
-
+import sys
 from glob import glob
 from PyPDF2 import PdfFileReader
 
@@ -11,12 +11,35 @@ from PyPDF2 import PdfFileReader
 # This is to skip file check permission when replacing the file.
 time_str = time.strftime(r'%Y%m%d_%H%M%S')
 
+def get_pdf_path():
+    if len(sys.argv) > 1:
+        # If PDF file is provided as argument
+        pdf_path = sys.argv[1]
+        if not os.path.exists(pdf_path):
+            raise FileNotFoundError(f"PDF file not found: {pdf_path}")
+        return pdf_path
+    else:
+        # Fallback to original behavior - get latest from pdf folder
+        pdfs = glob(os.path.join('pdf', '*transactions*.pdf'))
+        if not pdfs:
+            raise FileNotFoundError("No PDF files found in pdf/ directory")
+
+        return max(pdfs, key=os.path.getmtime)
+
+
 # Set file paths
 # Get the latest Transaction PDF File
-pdfs = glob(os.path.join('pdf', '*transactions*.pdf'))
-PDF_LINK = max(pdfs, key=os.path.getctime)
-CSV_LINK = os.path.join('csv', f'tng_ewallet_transactions_{time_str}.csv')
+PDF_LINK = get_pdf_path()
+
+# Extract filename without extension for the CSV name
+pdf_basename = os.path.splitext(os.path.basename(PDF_LINK))[0]
+CSV_LINK = os.path.join('csv', f'{pdf_basename}_{time_str}.csv')
 MISSING_DATA_LINK = os.path.join('missing_data', 'missing_data.csv')
+
+# Ensure required directories exist
+os.makedirs('csv', exist_ok=True)
+os.makedirs('missing_data', exist_ok=True)
+
 
 def check_pdf_version(pdf_link):
     with open(pdf_link, 'rb') as f:
@@ -292,38 +315,45 @@ def v2_df_clean_table(table):
         .dropna()
         .iloc[::-1]
     )
-    
 
 if __name__ == '__main__':
-    version = check_pdf_version(PDF_LINK)
-    table = read_pdf_table(PDF_LINK, version)
-    
-    if version == 1:
-        df = v1_df_clean_tables(table)
-        # Separate the transactions with normal trx (df1) and GO+ trx (df2)
-        df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
-        df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
-        
-        # Bug: Direct Credit Entry missing
-        df1 = impute_direct_credit(df1)
-        
-        # Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
-        df1 = fix_money_receive_balance(df1)
-        
-        # Bug: Fix reversing entries
-        df1 = fix_reversing_entries(df1)
-        
-        # Final cleaning
-        df1 = df1_final_cleaning(df1)
-        df2 = df2_final_cleaning(df2)
+    try:
+        version = check_pdf_version(PDF_LINK)
+        table = read_pdf_table(PDF_LINK, version)
 
-        # Merge both trxs and export to csv
-        (
-            pd
-            .concat([df2, df1])
-            .sort_values('Date', kind='mergesort')
-            .to_csv(CSV_LINK, index=False,  encoding='utf-8')
-        )
-    else:
-        df = v2_df_clean_table(table)
-        df.to_csv(CSV_LINK, index=False,  encoding='utf-8')
+        if version == 1:
+            df = v1_df_clean_tables(table)
+            # Separate the transactions with normal trx (df1) and GO+ trx (df2)
+            df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
+            df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
+
+            # Bug: Direct Credit Entry missing
+            df1 = impute_direct_credit(df1)
+
+            # Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
+            df1 = fix_money_receive_balance(df1)
+
+            # Bug: Fix reversing entries
+            df1 = fix_reversing_entries(df1)
+
+            # Final cleaning
+            df1 = df1_final_cleaning(df1)
+            df2 = df2_final_cleaning(df2)
+
+            # Merge both trxs and export to csv
+            (
+                pd
+                .concat([df2, df1])
+                .sort_values('Date', kind='mergesort')
+                .to_csv(CSV_LINK, index=False, encoding='utf-8')
+            )
+        else:
+            df = v2_df_clean_table(table)
+            df.to_csv(CSV_LINK, index=False, encoding='utf-8')
+
+        print(f"Successfully processed {PDF_LINK}")
+        print(f"Output saved to {CSV_LINK}")
+
+    except Exception as e:
+        print(f"Error processing PDF: {str(e)}", file=sys.stderr)
+        sys.exit(1)
