@@ -40,7 +40,7 @@ Download the attached PDF, make sure its name is **tng_ewallet_transactions.pdf*
 
 ### Download the PDF Statement via TNG ePortal
 Here're the instruction to download the newer version of PDF Statement via TNG ePortal:
-1. Log in to the [TNG ePortal](https://eportal.touchngo.com.my/login) by scaning QR Code using your TNG eWallet APP.
+1. Log in to the [TNG ePortal](https://eportal.touchngo.com.my/login) by scanning QR Code using your TNG eWallet APP.
 2. Click `See More` button navigate to the `My Transactions` page.
 3. Click the `Download` button to download the your statement.
 4. Place the pdf statement under the `pdf/` folder of this project
@@ -60,9 +60,9 @@ Here're the instruction to download the newer version of PDF Statement via TNG e
         Managing virtual environment using venv
       </summary>
       <br>
-      
+
       This guide will help you create a Python virtual environment using `venv` and install dependencies from a `requirements.txt` file.
-      
+
       First, You need to install [Python 3](https://www.python.org/)
 
       To create a virtual environment:
@@ -89,7 +89,7 @@ Here're the instruction to download the newer version of PDF Statement via TNG e
       # Installing required dependencies
       pip install -r requirements.txt
       ```
-      
+
       Alternatively you may install the package manually using the method mentioned in [3. Dependencies](#dependencies)
 
       When you’re done working, you can deactivate the virtual environment by running:
@@ -100,43 +100,43 @@ Here're the instruction to download the newer version of PDF Statement via TNG e
 
       This will deactivate the current environment and return you to your system’s default Python environment.
     </details>
-    
+
     ---
-    
+
     <details>
       <summary>
         Managing virtual environment using conda
       </summary>
       <br>
-      
+
       Download & install miniconda from the [official website](https://docs.anaconda.com/miniconda/miniconda-install/) 
-      
+
       To create a new conda environment (cloning the `base`):
       ```bash
       # # Create a conda environment (you can name it 'tng' or something else)
       conda create -n tng --clone base
       ```
-      
+
       To switch over the `tng` environment
       ```bash
       # Activating 'tng' environment
       conda activate tng
       ```
-      
+
       Once your conda environment is activated, install the dependencies listed in requirements.txt by running:
       ```bash
       # Installing required dependencies
       pip install -r requirements.txt
       ```
-      
+
       Alternatively you may install the package manually using the method mentioned in [3. Dependencies](#dependencies)
-      
+
       To leave the `tng` environment
       ```bash
       # Deactivating 'tng' environment
       conda deactivate tng
       ```
-      
+
     </details>
 
 <a id="dependencies"></a>

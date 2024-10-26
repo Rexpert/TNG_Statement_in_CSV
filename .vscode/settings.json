@@ -1,9 +1,35 @@
 {
     "cSpell.words": [
+        "astype",
         "autofix",
+        "cumsum",
+        "dompdf",
+        "dropna",
+        "Duit",
+        "DUITNOW",
         "ewallet",
+        "FERTO",
+        "fillna",
+        "Ghostscript",
+        "idxmax",
+        "iloc",
+        "isna",
+        "iterrows",
+        "labelrotation",
         "matplotlib",
+        "mergesort",
+        "miniconda",
+        "notna",
+        "numpy",
+        "pdfs",
         "Rexpert",
-        "venv"
+        "RFID",
+        "skiprows",
+        "TNGD",
+        "TRANSFERTO",
+        "trxs",
+        "venv",
+        "xaxis",
+        "yaxis"
     ]
 }

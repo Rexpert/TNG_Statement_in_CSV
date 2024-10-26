@@ -128,7 +128,7 @@ def fix_reversing_entries(df1):
     # 1. Same date
     # 2. Description = Quick Reload Payment (via GO+ Balance), follow by another transaction
     # 3. With the same amount in a row
-    # 4. Must be a positive trasaction: 
+    # 4. Must be a positive transaction: 
     #    Current Balance - Current Amount = Previous Balance
     # 5. Next transaction must be a negative transaction:
     #    A. Flag if Next Amount + Next Balance != Current Balance 
@@ -148,10 +148,10 @@ def fix_reversing_entries(df1):
         ) :
             new_idx.append((i, i+1))
             new_idx.append((i+1, i))
-    
+
     # Applying new index to df1
     df1 = df1.rename(dict(new_idx)).sort_index()
-    
+
     # Attempt 2: Rechecking reversing entries & apply fix immediately
     def check_reverse_entry(df1):
         # Get index which causing reversing entries
@@ -173,7 +173,7 @@ def fix_reversing_entries(df1):
             .index
             .to_list()
         )
-    
+
     idx = check_reverse_entry(df1)
     check = 0
     while len(idx) != 0:
@@ -292,27 +292,27 @@ def v2_df_clean_table(table):
         .dropna()
         .iloc[::-1]
     )
-    
+
 
 if __name__ == '__main__':
     version = check_pdf_version(PDF_LINK)
     table = read_pdf_table(PDF_LINK, version)
-    
+
     if version == 1:
         df = v1_df_clean_tables(table)
         # Separate the transactions with normal trx (df1) and GO+ trx (df2)
         df1 = df.loc[lambda x: ~x['Transaction Type'].str.startswith('GO+')]
         df2 = df.loc[lambda x: x['Transaction Type'].str.startswith('GO+')]
-        
+
         # Bug: Direct Credit Entry missing
         df1 = impute_direct_credit(df1)
-        
+
         # Bug: Money Packet Received & Direct Credit (money receive entries) not displaying true bal
         df1 = fix_money_receive_balance(df1)
-        
+
         # Bug: Fix reversing entries
         df1 = fix_reversing_entries(df1)
-        
+
         # Final cleaning
         df1 = df1_final_cleaning(df1)
         df2 = df2_final_cleaning(df2)
